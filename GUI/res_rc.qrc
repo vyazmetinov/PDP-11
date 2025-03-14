@@ -1,0 +1,16 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icons/close_small.svg</file>
+    <file>icons/content_cut.svg</file>
+    <file>icons/crop_5_4.svg</file>
+    <file>icons/document_search.svg</file>
+    <file>icons/download.svg</file>
+    <file>icons/file_copy.svg</file>
+    <file>icons/folder.svg</file>
+    <file>icons/hardware.svg</file>
+    <file>icons/keyboard_return.svg</file>
+    <file>icons/match_case.svg</file>
+    <file>icons/play_arrow.svg</file>
+    <file>icons/spellcheck.svg</file>
+  </qresource>
+</RCC>
