@@ -153,7 +153,7 @@
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">#verticalFrame{
+          <string notr="true">#Header{
 background-color: white;
 border-bottom: 1px solid rgb(169, 172, 172);
 }</string>
@@ -225,25 +225,30 @@ border-bottom: 1px solid rgb(169, 172, 172);
 color: green;
 border: 1px solid black;
 border-radius: 5px;
+
 }
 QPushButton:hover{
-	border: 1px solid red;
+	background-color:rgb(230, 230, 230);
 }
 
 QPushButton:pressed{
-	border: 1px solid red;
+	background-color:rgb(210, 210, 210);
 }</string>
                </property>
                <property name="inputMethodHints">
                 <set>Qt::ImhNone</set>
                </property>
                <property name="text">
-                <string>Run</string>
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="res_rc.qrc">
+                 <normaloff>:/icons/icons/play_arrow.svg</normaloff>:/icons/icons/play_arrow.svg</iconset>
                </property>
                <property name="iconSize">
                 <size>
                  <width>32</width>
-                 <height>32</height>
+                 <height>26</height>
                 </size>
                </property>
                <property name="checkable">
@@ -277,18 +282,34 @@ QPushButton:pressed{
                 </font>
                </property>
                <property name="styleSheet">
-                <string notr="true">color: red;
+                <string notr="true">QPushButton{
+color: red;
 border: 1px solid black;
-border-radius: 5px</string>
+border-radius: 5px;
+}
+QPushButton:hover{
+	background-color:rgb(230, 230, 230);
+}
+
+QPushButton:pressed{
+	background-color:rgb(210, 210, 210);
+}</string>
                </property>
                <property name="text">
-                <string>Stop</string>
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="res_rc.qrc">
+                 <normaloff>:/icons/icons/crop_5_4.svg</normaloff>:/icons/icons/crop_5_4.svg</iconset>
                </property>
                <property name="iconSize">
                 <size>
                  <width>32</width>
-                 <height>32</height>
+                 <height>26</height>
                 </size>
+               </property>
+               <property name="shortcut">
+                <string extracomment="stop"/>
                </property>
               </widget>
              </item>
