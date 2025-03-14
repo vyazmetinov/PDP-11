@@ -85,7 +85,7 @@ class Ui_MainWindow(object):
         self.Header.setObjectName(u"Header")
         self.Header.setMinimumSize(QSize(785, 38))
         self.Header.setMaximumSize(QSize(16777215, 38))
-        self.Header.setStyleSheet(u"#verticalFrame{\n"
+        self.Header.setStyleSheet(u"#Header{\n"
 "background-color: white;\n"
 "border-bottom: 1px solid rgb(169, 172, 172);\n"
 "}")
@@ -116,16 +116,20 @@ class Ui_MainWindow(object):
 "color: green;\n"
 "border: 1px solid black;\n"
 "border-radius: 5px;\n"
+"\n"
 "}\n"
 "QPushButton:hover{\n"
-"	border: 1px solid red;\n"
+"	background-color:rgb(230, 230, 230);\n"
 "}\n"
 "\n"
 "QPushButton:pressed{\n"
-"	border: 1px solid red;\n"
+"	background-color:rgb(210, 210, 210);\n"
 "}")
         self.Run.setInputMethodHints(Qt.ImhNone)
-        self.Run.setIconSize(QSize(32, 32))
+        icon = QIcon()
+        icon.addFile(u":/icons/icons/play_arrow.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.Run.setIcon(icon)
+        self.Run.setIconSize(QSize(32, 26))
         self.Run.setCheckable(False)
         self.Run.setAutoRepeatDelay(0)
         self.Run.setAutoRepeatInterval(0)
@@ -138,10 +142,22 @@ class Ui_MainWindow(object):
         self.Stop.setObjectName(u"Stop")
         self.Stop.setMinimumSize(QSize(75, 25))
         self.Stop.setFont(font)
-        self.Stop.setStyleSheet(u"color: red;\n"
+        self.Stop.setStyleSheet(u"QPushButton{\n"
+"color: red;\n"
 "border: 1px solid black;\n"
-"border-radius: 5px")
-        self.Stop.setIconSize(QSize(32, 32))
+"border-radius: 5px;\n"
+"}\n"
+"QPushButton:hover{\n"
+"	background-color:rgb(230, 230, 230);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"	background-color:rgb(210, 210, 210);\n"
+"}")
+        icon1 = QIcon()
+        icon1.addFile(u":/icons/icons/crop_5_4.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.Stop.setIcon(icon1)
+        self.Stop.setIconSize(QSize(32, 26))
 
         self.Debug.addWidget(self.Stop)
 
@@ -244,8 +260,11 @@ class Ui_MainWindow(object):
         self.Run_2.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u043f\u0443\u0441\u043a", None))
         self.Build.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0431\u043e\u0440\u043a\u0430", None))
         self.actionDebug.setText(QCoreApplication.translate("MainWindow", u"Debug", None))
-        self.Run.setText(QCoreApplication.translate("MainWindow", u"Run", None))
-        self.Stop.setText(QCoreApplication.translate("MainWindow", u"Stop", None))
+        self.Run.setText("")
+        self.Stop.setText("")
+#if QT_CONFIG(shortcut)
+        self.Stop.setShortcut("")
+#endif // QT_CONFIG(shortcut)
         self.Stroke_numbers.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
