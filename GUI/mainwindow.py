@@ -16,17 +16,17 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
-    QLayout, QMainWindow, QMenu, QMenuBar,
-    QPlainTextEdit, QPushButton, QSizePolicy, QTextBrowser,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QDockWidget, QFrame, QGridLayout,
+    QHBoxLayout, QLabel, QLayout, QMainWindow,
+    QMenu, QMenuBar, QPushButton, QSizePolicy,
+    QTextBrowser, QTextEdit, QVBoxLayout, QWidget)
 import res_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(791, 501)
+        MainWindow.resize(981, 586)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -51,6 +51,18 @@ class Ui_MainWindow(object):
         self.Build.setObjectName(u"Build")
         self.actionDebug = QAction(MainWindow)
         self.actionDebug.setObjectName(u"actionDebug")
+        self.action = QAction(MainWindow)
+        self.action.setObjectName(u"action")
+        self.action.setCheckable(True)
+        self.action.setChecked(True)
+        self.action_2 = QAction(MainWindow)
+        self.action_2.setObjectName(u"action_2")
+        self.action_2.setCheckable(True)
+        self.action_2.setChecked(True)
+        self.action_3 = QAction(MainWindow)
+        self.action_3.setObjectName(u"action_3")
+        self.action_3.setCheckable(True)
+        self.action_3.setChecked(True)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralwidget.setEnabled(True)
@@ -61,181 +73,173 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setSizeConstraint(QLayout.SetNoConstraint)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.Frame = QFrame(self.centralwidget)
-        self.Frame.setObjectName(u"Frame")
-        self.Frame.setEnabled(True)
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.Frame.sizePolicy().hasHeightForWidth())
-        self.Frame.setSizePolicy(sizePolicy1)
-        self.Frame.setMinimumSize(QSize(700, 400))
-        self.Frame.setMaximumSize(QSize(1920, 1080))
-        self.Frame.setSizeIncrement(QSize(0, 0))
-        self.Frame.setBaseSize(QSize(0, 0))
-        self.Frame.setAutoFillBackground(True)
-        self.Frame.setStyleSheet(u"")
-        self.Frame.setFrameShape(QFrame.NoFrame)
-        self.Frame.setMidLineWidth(1)
-        self.verticalLayout_2 = QVBoxLayout(self.Frame)
-        self.verticalLayout_2.setSpacing(0)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.Header = QFrame(self.Frame)
-        self.Header.setObjectName(u"Header")
-        self.Header.setMinimumSize(QSize(785, 38))
-        self.Header.setMaximumSize(QSize(16777215, 38))
-        self.Header.setStyleSheet(u"#Header{\n"
-"background-color: white;\n"
-"border-bottom: 1px solid rgb(169, 172, 172);\n"
-"}")
-        self.Header.setFrameShape(QFrame.NoFrame)
-        self.Header.setLineWidth(1)
-        self.Vertical_items = QVBoxLayout(self.Header)
-        self.Vertical_items.setObjectName(u"Vertical_items")
-        self.Vertical_items.setContentsMargins(0, 0, 0, 0)
-        self.Debug_3 = QFrame(self.Header)
-        self.Debug_3.setObjectName(u"Debug_3")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.Debug_3.sizePolicy().hasHeightForWidth())
-        self.Debug_3.setSizePolicy(sizePolicy2)
-        self.Debug_3.setMinimumSize(QSize(100, 36))
-        self.Debug = QHBoxLayout(self.Debug_3)
-        self.Debug.setObjectName(u"Debug")
-        self.Debug.setContentsMargins(0, 1, 6, 0)
-        self.Run = QPushButton(self.Debug_3)
-        self.Run.setObjectName(u"Run")
-        self.Run.setEnabled(True)
-        self.Run.setMinimumSize(QSize(75, 25))
-        font = QFont()
-        font.setFamilies([u"Raleway"])
-        self.Run.setFont(font)
-        self.Run.setStyleSheet(u"QPushButton{\n"
-"color: green;\n"
-"border: 1px solid black;\n"
-"border-radius: 5px;\n"
-"\n"
-"}\n"
-"QPushButton:hover{\n"
-"	background-color:rgb(230, 230, 230);\n"
-"}\n"
-"\n"
-"QPushButton:pressed{\n"
-"	background-color:rgb(210, 210, 210);\n"
-"}")
-        self.Run.setInputMethodHints(Qt.ImhNone)
-        icon = QIcon()
-        icon.addFile(u":/icons/icons/play_arrow.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.Run.setIcon(icon)
-        self.Run.setIconSize(QSize(32, 26))
-        self.Run.setCheckable(False)
-        self.Run.setAutoRepeatDelay(0)
-        self.Run.setAutoRepeatInterval(0)
-        self.Run.setAutoDefault(False)
-        self.Run.setFlat(False)
-
-        self.Debug.addWidget(self.Run)
-
-        self.Stop = QPushButton(self.Debug_3)
-        self.Stop.setObjectName(u"Stop")
-        self.Stop.setMinimumSize(QSize(75, 25))
-        self.Stop.setFont(font)
-        self.Stop.setStyleSheet(u"QPushButton{\n"
-"color: red;\n"
-"border: 1px solid black;\n"
-"border-radius: 5px;\n"
-"}\n"
-"QPushButton:hover{\n"
-"	background-color:rgb(230, 230, 230);\n"
-"}\n"
-"\n"
-"QPushButton:pressed{\n"
-"	background-color:rgb(210, 210, 210);\n"
-"}")
-        icon1 = QIcon()
-        icon1.addFile(u":/icons/icons/crop_5_4.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.Stop.setIcon(icon1)
-        self.Stop.setIconSize(QSize(32, 26))
-
-        self.Debug.addWidget(self.Stop)
-
-
-        self.Vertical_items.addWidget(self.Debug_3, 0, Qt.AlignRight|Qt.AlignVCenter)
-
-
-        self.verticalLayout_2.addWidget(self.Header)
-
-        self.Editor = QHBoxLayout()
-        self.Editor.setSpacing(0)
-        self.Editor.setObjectName(u"Editor")
-        self.Stroke_numbers = QTextBrowser(self.Frame)
-        self.Stroke_numbers.setObjectName(u"Stroke_numbers")
-        self.Stroke_numbers.setMinimumSize(QSize(30, 0))
-        self.Stroke_numbers.setMaximumSize(QSize(30, 16777215))
-        self.Stroke_numbers.setFont(font)
-        self.Stroke_numbers.setStyleSheet(u"background:white;\n"
-"color: black;\n"
-"border-right: 1px solid black;\n"
-"\n"
-"")
-
-        self.Editor.addWidget(self.Stroke_numbers)
-
-        self.Memory = QPlainTextEdit(self.Frame)
-        self.Memory.setObjectName(u"Memory")
-        self.Memory.setMinimumSize(QSize(50, 0))
-        self.Memory.setMaximumSize(QSize(200, 16777215))
-        self.Memory.setFont(font)
-        self.Memory.setStyleSheet(u"background:white;\n"
-"color: black;\n"
-"border-right: 1px solid black;\n"
-"")
-
-        self.Editor.addWidget(self.Memory)
-
-        self.Registers = QPlainTextEdit(self.Frame)
-        self.Registers.setObjectName(u"Registers")
-        self.Registers.setMinimumSize(QSize(50, 0))
-        self.Registers.setMaximumSize(QSize(200, 16777215))
-        self.Registers.setFont(font)
-        self.Registers.setStyleSheet(u"background:white;\n"
-"color: black;\n"
-"border-right: 1px solid black;")
-
-        self.Editor.addWidget(self.Registers)
-
-        self.Code = QPlainTextEdit(self.Frame)
-        self.Code.setObjectName(u"Code")
-        self.Code.setFont(font)
-        self.Code.setStyleSheet(u"background:white;\n"
-"color: black;\n"
-"")
-
-        self.Editor.addWidget(self.Code)
-
-
-        self.verticalLayout_2.addLayout(self.Editor)
-
-
-        self.gridLayout.addWidget(self.Frame, 0, 0, 1, 1)
-
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 791, 42))
+        self.menubar.setGeometry(QRect(0, 0, 981, 42))
         self.File = QMenu(self.menubar)
         self.File.setObjectName(u"File")
         self.Debug_2 = QMenu(self.menubar)
         self.Debug_2.setObjectName(u"Debug_2")
         self.menu_3 = QMenu(self.menubar)
         self.menu_3.setObjectName(u"menu_3")
+        self.menu = QMenu(self.menubar)
+        self.menu.setObjectName(u"menu")
         MainWindow.setMenuBar(self.menubar)
+        self.registers = QDockWidget(MainWindow)
+        self.registers.setObjectName(u"registers")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.registers.sizePolicy().hasHeightForWidth())
+        self.registers.setSizePolicy(sizePolicy1)
+        self.registers.setMinimumSize(QSize(62, 62))
+        self.registers.setMaximumSize(QSize(524287, 524287))
+        self.registers.setStyleSheet(u"")
+        self.dockWidgetContents_7 = QWidget()
+        self.dockWidgetContents_7.setObjectName(u"dockWidgetContents_7")
+        self.reg_frame = QFrame(self.dockWidgetContents_7)
+        self.reg_frame.setObjectName(u"reg_frame")
+        self.reg_frame.setGeometry(QRect(0, 0, 1920, 1080))
+        self.reg_frame.setMinimumSize(QSize(1920, 1080))
+        self.reg_frame.setStyleSheet(u"#reg_frame{\n"
+"background-color: white;\n"
+"}\n"
+"")
+        self.verticalLayout_3 = QVBoxLayout(self.reg_frame)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.horizontalFrame_3 = QFrame(self.reg_frame)
+        self.horizontalFrame_3.setObjectName(u"horizontalFrame_3")
+        self.horizontalFrame_3.setMaximumSize(QSize(16777215, 60))
+        self.horizontalLayout_5 = QHBoxLayout(self.horizontalFrame_3)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.label_3 = QLabel(self.horizontalFrame_3)
+        self.label_3.setObjectName(u"label_3")
+
+        self.horizontalLayout_5.addWidget(self.label_3)
+
+        self.textBrowser_2 = QTextBrowser(self.horizontalFrame_3)
+        self.textBrowser_2.setObjectName(u"textBrowser_2")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Expanding)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.textBrowser_2.sizePolicy().hasHeightForWidth())
+        self.textBrowser_2.setSizePolicy(sizePolicy2)
+        self.textBrowser_2.setMinimumSize(QSize(1920, 1080))
+        self.textBrowser_2.setFrameShape(QFrame.NoFrame)
+
+        self.horizontalLayout_5.addWidget(self.textBrowser_2)
+
+
+        self.verticalLayout_3.addWidget(self.horizontalFrame_3, 0, Qt.AlignTop)
+
+        self.registers.setWidget(self.dockWidgetContents_7)
+        MainWindow.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.registers)
+        self.code = QDockWidget(MainWindow)
+        self.code.setObjectName(u"code")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.code.sizePolicy().hasHeightForWidth())
+        self.code.setSizePolicy(sizePolicy3)
+        self.code.setBaseSize(QSize(500, 0))
+        self.dockWidgetContents_10 = QWidget()
+        self.dockWidgetContents_10.setObjectName(u"dockWidgetContents_10")
+        self.code_frame = QFrame(self.dockWidgetContents_10)
+        self.code_frame.setObjectName(u"code_frame")
+        self.code_frame.setGeometry(QRect(0, 0, 1920, 1080))
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.code_frame.sizePolicy().hasHeightForWidth())
+        self.code_frame.setSizePolicy(sizePolicy4)
+        self.code_frame.setMinimumSize(QSize(1920, 1080))
+        self.code_frame.setStyleSheet(u"#code_frame{\n"
+"background-color: white;\n"
+"}")
+        self.verticalLayout_2 = QVBoxLayout(self.code_frame)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.line_item_2 = QFrame(self.code_frame)
+        self.line_item_2.setObjectName(u"line_item_2")
+        sizePolicy4.setHeightForWidth(self.line_item_2.sizePolicy().hasHeightForWidth())
+        self.line_item_2.setSizePolicy(sizePolicy4)
+        self.line_item_2.setMaximumSize(QSize(16777215, 60))
+        self.line_item = QHBoxLayout(self.line_item_2)
+        self.line_item.setObjectName(u"line_item")
+        self.line_item.setContentsMargins(0, 0, 0, 0)
+        self.label_2 = QLabel(self.line_item_2)
+        self.label_2.setObjectName(u"label_2")
+
+        self.line_item.addWidget(self.label_2)
+
+        self.textEdit = QTextEdit(self.line_item_2)
+        self.textEdit.setObjectName(u"textEdit")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Expanding)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.textEdit.sizePolicy().hasHeightForWidth())
+        self.textEdit.setSizePolicy(sizePolicy5)
+        self.textEdit.setFrameShape(QFrame.NoFrame)
+
+        self.line_item.addWidget(self.textEdit)
+
+
+        self.verticalLayout_2.addWidget(self.line_item_2, 0, Qt.AlignTop)
+
+        self.code.setWidget(self.dockWidgetContents_10)
+        MainWindow.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.code)
+        self.dockWidget_8 = QDockWidget(MainWindow)
+        self.dockWidget_8.setObjectName(u"dockWidget_8")
+        self.dockWidget_8.setMinimumSize(QSize(200, 80))
+        self.dockWidgetContents_11 = QWidget()
+        self.dockWidgetContents_11.setObjectName(u"dockWidgetContents_11")
+        self.header_2 = QFrame(self.dockWidgetContents_11)
+        self.header_2.setObjectName(u"header_2")
+        self.header_2.setGeometry(QRect(-20, 0, 1001, 80))
+        self.header_2.setMinimumSize(QSize(0, 80))
+        self.header_2.setStyleSheet(u"#header_2{\n"
+"background-color: white;\n"
+"}")
+        self.horizontalLayout_2 = QHBoxLayout(self.header_2)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.frame = QFrame(self.header_2)
+        self.frame.setObjectName(u"frame")
+        self.frame.setFrameShape(QFrame.NoFrame)
+        self.frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_3 = QHBoxLayout(self.frame)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.pushButton_2 = QPushButton(self.frame)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.pushButton_2.setMaximumSize(QSize(60, 40))
+        icon = QIcon()
+        icon.addFile(u":/icons/icons/crop_5_4.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_2.setIcon(icon)
+
+        self.horizontalLayout_3.addWidget(self.pushButton_2)
+
+        self.pushButton = QPushButton(self.frame)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setMaximumSize(QSize(60, 40))
+        icon1 = QIcon()
+        icon1.addFile(u":/icons/icons/play_arrow.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton.setIcon(icon1)
+
+        self.horizontalLayout_3.addWidget(self.pushButton)
+
+
+        self.horizontalLayout_2.addWidget(self.frame, 0, Qt.AlignRight|Qt.AlignTop)
+
+        self.dockWidget_8.setWidget(self.dockWidgetContents_11)
+        MainWindow.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, self.dockWidget_8)
 
         self.menubar.addAction(self.File.menuAction())
         self.menubar.addAction(self.Debug_2.menuAction())
         self.menubar.addAction(self.menu_3.menuAction())
+        self.menubar.addAction(self.menu.menuAction())
         self.File.addAction(self.Open)
         self.File.addAction(self.Create)
         self.File.addAction(self.Save)
@@ -244,6 +248,9 @@ class Ui_MainWindow(object):
         self.Debug_2.addAction(self.Run_2)
         self.Debug_2.addAction(self.Build)
         self.Debug_2.addAction(self.actionDebug)
+        self.menu.addAction(self.action)
+        self.menu.addAction(self.action_2)
+        self.menu.addAction(self.action_3)
 
         self.retranslateUi(MainWindow)
 
@@ -259,27 +266,28 @@ class Ui_MainWindow(object):
         self.Close.setText(QCoreApplication.translate("MainWindow", u"\u0417\u044b\u043a\u0440\u044b\u0442\u044c", None))
         self.Run_2.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u043f\u0443\u0441\u043a", None))
         self.Build.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0431\u043e\u0440\u043a\u0430", None))
-        self.actionDebug.setText(QCoreApplication.translate("MainWindow", u"Debug", None))
-        self.Run.setText("")
-        self.Stop.setText("")
-#if QT_CONFIG(shortcut)
-        self.Stop.setShortcut("")
-#endif // QT_CONFIG(shortcut)
-        self.Stroke_numbers.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Raleway'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'.AppleSystemUIFont';\">\u041d\u043e\u043c\u0435\u0440\u0430</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'.AppleSystemUIFont';\">\u0441\u0442\u0440\u043e\u043a</span></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'.AppleSystemUIFont';\"><br /></p></body></html>", None))
-        self.Memory.setPlainText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u043c\u044f\u0442\u044c\n"
-"", None))
-        self.Registers.setPlainText(QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0433\u0438\u0441\u0442\u0440\u044b\n"
-"", None))
-        self.Code.setPlainText(QCoreApplication.translate("MainWindow", u"\u041b\u0438\u0441\u0442\u0438\u043d\u0433\n"
-"", None))
+        self.actionDebug.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0432\u0435\u0440\u043a\u0430", None))
+        self.action.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043b\u0430\u0434\u043a\u0430", None))
+        self.action_2.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0433\u0438\u0441\u0442\u0440\u044b", None))
+        self.action_3.setText(QCoreApplication.translate("MainWindow", u"\u041a\u043e\u0434", None))
         self.File.setTitle(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b", None))
         self.Debug_2.setTitle(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043b\u0430\u0434\u043a\u0430", None))
         self.menu_3.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a", None))
+        self.menu.setTitle(QCoreApplication.translate("MainWindow", u"\u0412\u043a\u043b\u0430\u0434\u043a\u0438", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"regsiter", None))
+        self.textBrowser_2.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">value</p></body></html>", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"line_id", None))
+        self.textEdit.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">code</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+        self.pushButton_2.setText("")
+        self.pushButton.setText("")
     # retranslateUi
 
