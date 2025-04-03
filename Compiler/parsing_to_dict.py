@@ -198,4 +198,5 @@ def parse_test():
         print(i, parse_to_dict(i))
 
 
-parse_test()
+if __name__ == "__main__":
+    parse_test()
