@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>791</width>
-    <height>501</height>
+    <width>1006</width>
+    <height>714</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -76,373 +76,32 @@
      <number>0</number>
     </property>
     <item row="0" column="0">
-     <widget class="QFrame" name="Frame">
-      <property name="enabled">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="elideMode">
+       <enum>Qt::ElideRight</enum>
+      </property>
+      <property name="documentMode">
        <bool>true</bool>
       </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>700</width>
-        <height>400</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>1920</width>
-        <height>1080</height>
-       </size>
-      </property>
-      <property name="sizeIncrement">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="baseSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="midLineWidth">
-       <number>1</number>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QFrame" name="Header">
-         <property name="minimumSize">
-          <size>
-           <width>785</width>
-           <height>38</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>38</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">#Header{
-background-color: white;
-border-bottom: 1px solid rgb(169, 172, 172);
-}</string>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
-         </property>
-         <property name="lineWidth">
-          <number>1</number>
-         </property>
-         <layout class="QVBoxLayout" name="Vertical_items">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item alignment="Qt::AlignRight|Qt::AlignVCenter">
-           <widget class="QFrame" name="Debug_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>100</width>
-              <height>36</height>
-             </size>
-            </property>
-            <layout class="QHBoxLayout" name="Debug">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>1</number>
-             </property>
-             <property name="rightMargin">
-              <number>6</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item>
-              <widget class="QPushButton" name="Run">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>75</width>
-                 <height>25</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Raleway</family>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QPushButton{
-color: green;
-border: 1px solid black;
-border-radius: 5px;
-
-}
-QPushButton:hover{
-	background-color:rgb(230, 230, 230);
-}
-
-QPushButton:pressed{
-	background-color:rgb(210, 210, 210);
-}</string>
-               </property>
-               <property name="inputMethodHints">
-                <set>Qt::ImhNone</set>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="res_rc.qrc">
-                 <normaloff>:/icons/icons/play_arrow.svg</normaloff>:/icons/icons/play_arrow.svg</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>32</width>
-                 <height>26</height>
-                </size>
-               </property>
-               <property name="checkable">
-                <bool>false</bool>
-               </property>
-               <property name="autoRepeatDelay">
-                <number>0</number>
-               </property>
-               <property name="autoRepeatInterval">
-                <number>0</number>
-               </property>
-               <property name="autoDefault">
-                <bool>false</bool>
-               </property>
-               <property name="flat">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="Stop">
-               <property name="minimumSize">
-                <size>
-                 <width>75</width>
-                 <height>25</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Raleway</family>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QPushButton{
-color: red;
-border: 1px solid black;
-border-radius: 5px;
-}
-QPushButton:hover{
-	background-color:rgb(230, 230, 230);
-}
-
-QPushButton:pressed{
-	background-color:rgb(210, 210, 210);
-}</string>
-               </property>
-               <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="res_rc.qrc">
-                 <normaloff>:/icons/icons/crop_5_4.svg</normaloff>:/icons/icons/crop_5_4.svg</iconset>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>32</width>
-                 <height>26</height>
-                </size>
-               </property>
-               <property name="shortcut">
-                <string extracomment="stop"/>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="Editor">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QTextBrowser" name="Stroke_numbers">
-           <property name="minimumSize">
-            <size>
-             <width>30</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>30</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Raleway</family>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background:white;
-color: black;
-border-right: 1px solid black;
-
-</string>
-           </property>
-           <property name="html">
-            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Raleway'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;Номера&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;строк&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'.AppleSystemUIFont';&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPlainTextEdit" name="Memory">
-           <property name="minimumSize">
-            <size>
-             <width>50</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>200</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Raleway</family>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background:white;
-color: black;
-border-right: 1px solid black;
-</string>
-           </property>
-           <property name="plainText">
-            <string>Память
-</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPlainTextEdit" name="Registers">
-           <property name="minimumSize">
-            <size>
-             <width>50</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>200</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Raleway</family>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background:white;
-color: black;
-border-right: 1px solid black;</string>
-           </property>
-           <property name="plainText">
-            <string>Регистры
-</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPlainTextEdit" name="Code">
-           <property name="font">
-            <font>
-             <family>Raleway</family>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background:white;
-color: black;
-</string>
-           </property>
-           <property name="plainText">
-            <string>Листинг
-</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
+      <widget class="Code" name="code">
+       <attribute name="title">
+        <string>Код</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="widget">
+       <attribute name="title">
+        <string>Ассемблер</string>
+       </attribute>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -452,8 +111,8 @@ color: black;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>791</width>
-     <height>42</height>
+     <width>1006</width>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="File">
@@ -479,9 +138,125 @@ color: black;
      <string>Поиск</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Вкладки</string>
+    </property>
+    <addaction name="action"/>
+    <addaction name="action_2"/>
+    <addaction name="action_3"/>
+   </widget>
    <addaction name="File"/>
    <addaction name="Debug_2"/>
    <addaction name="menu_3"/>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QDockWidget" name="header_2">
+   <property name="minimumSize">
+    <size>
+     <width>200</width>
+     <height>80</height>
+    </size>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_11">
+    <widget class="QFrame" name="header_frame">
+     <property name="geometry">
+      <rect>
+       <x>-20</x>
+       <y>0</y>
+       <width>1001</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>80</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#header_2{
+background-color: white;
+}</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item alignment="Qt::AlignRight|Qt::AlignTop">
+       <widget class="QFrame" name="header_item">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QPushButton" name="stop">
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="res_rc.qrc">
+             <normaloff>:/icons/icons/crop_5_4.svg</normaloff>:/icons/icons/crop_5_4.svg</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="run">
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="res_rc.qrc">
+             <normaloff>:/icons/icons/play_arrow.svg</normaloff>:/icons/icons/play_arrow.svg</iconset>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="Registers" name="registers">
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+  </widget>
+  <widget class="MemoryView" name="memoryView">
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
   </widget>
   <action name="Open">
    <property name="text">
@@ -520,10 +295,63 @@ color: black;
   </action>
   <action name="actionDebug">
    <property name="text">
-    <string>Debug</string>
+    <string>Проверка</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Отладка</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Регистры</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Код</string>
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Registers</class>
+   <extends>QDockWidget</extends>
+   <header>reg</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MemoryView</class>
+   <extends>QDockWidget</extends>
+   <header>mem_view</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Code</class>
+   <extends>QWidget</extends>
+   <header>code</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="res_rc.qrc"/>
  </resources>
