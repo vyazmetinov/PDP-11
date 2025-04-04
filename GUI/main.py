@@ -4,17 +4,18 @@ import sys
 import PySide6
 from PySide6.QtWidgets import QApplication, QWidget
 
-import mainwindow
+import ui_mainwindow
 
 
 
 
-class ExampleApp(PySide6.QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
+
+class ExampleApp(PySide6.QtWidgets.QMainWindow, ui_mainwindow.Ui_MainWindow):
     def __init__(self):
         # Это здесь нужно для доступа к переменным, методам
         # и т.д. в файле design.py
         super().__init__()
-        self.ui = mainwindow.Ui_MainWindow()
+        self.ui = ui_mainwindow.Ui_MainWindow()
         self.setupUi(self)  # Это нужно для инициализации нашего дизайна
 
 
