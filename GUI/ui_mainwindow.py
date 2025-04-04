@@ -17,16 +17,20 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QDockWidget, QFrame, QGridLayout,
-    QHBoxLayout, QLabel, QLayout, QMainWindow,
-    QMenu, QMenuBar, QPushButton, QSizePolicy,
-    QTextBrowser, QTextEdit, QVBoxLayout, QWidget)
+    QHBoxLayout, QLayout, QMainWindow, QMenu,
+    QMenuBar, QPushButton, QSizePolicy, QTabWidget,
+    QWidget)
+
+from code import Code
+from mem_view import MemoryView
+from reg import Registers
 import res_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(990, 586)
+        MainWindow.resize(1006, 714)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -73,10 +77,25 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setSizeConstraint(QLayout.SetNoConstraint)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.tabWidget = QTabWidget(self.centralwidget)
+        self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setTabPosition(QTabWidget.North)
+        self.tabWidget.setTabShape(QTabWidget.Rounded)
+        self.tabWidget.setElideMode(Qt.ElideRight)
+        self.tabWidget.setDocumentMode(True)
+        self.code = Code(MainWindow)
+        self.code.setObjectName(u"code")
+        self.tabWidget.addTab(self.code, "")
+        self.widget = QWidget()
+        self.widget.setObjectName(u"widget")
+        self.tabWidget.addTab(self.widget, "")
+
+        self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 990, 42))
+        self.menubar.setGeometry(QRect(0, 0, 1006, 24))
         self.File = QMenu(self.menubar)
         self.File.setObjectName(u"File")
         self.Debug_2 = QMenu(self.menubar)
@@ -86,117 +105,6 @@ class Ui_MainWindow(object):
         self.menu = QMenu(self.menubar)
         self.menu.setObjectName(u"menu")
         MainWindow.setMenuBar(self.menubar)
-        self.registers = QDockWidget(MainWindow)
-        self.registers.setObjectName(u"registers")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.registers.sizePolicy().hasHeightForWidth())
-        self.registers.setSizePolicy(sizePolicy1)
-        self.registers.setMinimumSize(QSize(62, 62))
-        self.registers.setMaximumSize(QSize(524287, 524287))
-        self.registers.setStyleSheet(u"")
-        self.dockWidgetContents_7 = QWidget()
-        self.dockWidgetContents_7.setObjectName(u"dockWidgetContents_7")
-        self.reg_frame = QFrame(self.dockWidgetContents_7)
-        self.reg_frame.setObjectName(u"reg_frame")
-        self.reg_frame.setGeometry(QRect(0, 0, 1920, 1080))
-        self.reg_frame.setMinimumSize(QSize(1920, 1080))
-        self.reg_frame.setStyleSheet(u"#reg_frame{\n"
-"background-color: white;\n"
-"}\n"
-"")
-        self.verticalLayout_3 = QVBoxLayout(self.reg_frame)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.reg_item = QFrame(self.reg_frame)
-        self.reg_item.setObjectName(u"reg_item")
-        self.reg_item.setMaximumSize(QSize(16777215, 60))
-        self.reg_item.setFrameShape(QFrame.Box)
-        self.horizontalLayout_5 = QHBoxLayout(self.reg_item)
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
-        self.reg = QLabel(self.reg_item)
-        self.reg.setObjectName(u"reg")
-        self.reg.setFrameShape(QFrame.Box)
-        self.reg.setFrameShadow(QFrame.Plain)
-
-        self.horizontalLayout_5.addWidget(self.reg)
-
-        self.value = QTextBrowser(self.reg_item)
-        self.value.setObjectName(u"value")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Expanding)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.value.sizePolicy().hasHeightForWidth())
-        self.value.setSizePolicy(sizePolicy2)
-        self.value.setMinimumSize(QSize(1920, 0))
-        self.value.setFrameShape(QFrame.Box)
-        self.value.setFrameShadow(QFrame.Plain)
-
-        self.horizontalLayout_5.addWidget(self.value)
-
-
-        self.verticalLayout_3.addWidget(self.reg_item, 0, Qt.AlignTop)
-
-        self.registers.setWidget(self.dockWidgetContents_7)
-        MainWindow.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.registers)
-        self.code = QDockWidget(MainWindow)
-        self.code.setObjectName(u"code")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.code.sizePolicy().hasHeightForWidth())
-        self.code.setSizePolicy(sizePolicy3)
-        self.code.setBaseSize(QSize(500, 0))
-        self.dockWidgetContents_10 = QWidget()
-        self.dockWidgetContents_10.setObjectName(u"dockWidgetContents_10")
-        self.code_frame = QFrame(self.dockWidgetContents_10)
-        self.code_frame.setObjectName(u"code_frame")
-        self.code_frame.setGeometry(QRect(-1, -1, 1920, 1080))
-        self.code_frame.setMinimumSize(QSize(1920, 1080))
-        self.code_frame.setStyleSheet(u"background-color: white;")
-        self.code_frame.setFrameShape(QFrame.StyledPanel)
-        self.code_frame.setFrameShadow(QFrame.Raised)
-        self.code_item = QFrame(self.code_frame)
-        self.code_item.setObjectName(u"code_item")
-        self.code_item.setEnabled(True)
-        self.code_item.setGeometry(QRect(0, 0, 1920, 1080))
-        self.code_item.setMinimumSize(QSize(1920, 1080))
-        self.code_item.setStyleSheet(u"#reg_frame{\n"
-"background-color: white;\n"
-"}\n"
-"")
-        self.verticalLayout_6 = QVBoxLayout(self.code_item)
-        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
-        self.verticalLayout_6.setContentsMargins(0, 0, 0, 0)
-        self.code_line = QFrame(self.code_item)
-        self.code_line.setObjectName(u"code_line")
-        self.code_line.setMaximumSize(QSize(1000000, 60))
-        self.code_line.setFrameShape(QFrame.Box)
-        self.horizontalLayout_9 = QHBoxLayout(self.code_line)
-        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
-        self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
-        self.line_id = QLabel(self.code_line)
-        self.line_id.setObjectName(u"line_id")
-        self.line_id.setEnabled(True)
-        self.line_id.setFrameShape(QFrame.Box)
-        self.line_id.setFrameShadow(QFrame.Plain)
-
-        self.horizontalLayout_9.addWidget(self.line_id)
-
-        self.line = QTextEdit(self.code_line)
-        self.line.setObjectName(u"line")
-        self.line.setFrameShape(QFrame.Box)
-        self.line.setFrameShadow(QFrame.Plain)
-
-        self.horizontalLayout_9.addWidget(self.line)
-
-
-        self.verticalLayout_6.addWidget(self.code_line, 0, Qt.AlignTop)
-
-        self.code.setWidget(self.dockWidgetContents_10)
-        MainWindow.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.code)
         self.header_2 = QDockWidget(MainWindow)
         self.header_2.setObjectName(u"header_2")
         self.header_2.setMinimumSize(QSize(200, 80))
@@ -241,6 +149,13 @@ class Ui_MainWindow(object):
 
         self.header_2.setWidget(self.dockWidgetContents_11)
         MainWindow.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, self.header_2)
+        self.dockWidget = Registers(MainWindow)
+        self.dockWidget.setObjectName(u"dockWidget")
+        MainWindow.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dockWidget)
+        self.dockWidget_3 = MemoryView(MainWindow)
+        self.dockWidget_3.setObjectName(u"dockWidget_3")
+        self.dockWidget_3.setAllowedAreas(Qt.BottomDockWidgetArea)
+        MainWindow.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.dockWidget_3)
 
         self.menubar.addAction(self.File.menuAction())
         self.menubar.addAction(self.Debug_2.menuAction())
@@ -260,6 +175,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
+        self.tabWidget.setCurrentIndex(0)
+
+
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
@@ -276,17 +194,12 @@ class Ui_MainWindow(object):
         self.action.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043b\u0430\u0434\u043a\u0430", None))
         self.action_2.setText(QCoreApplication.translate("MainWindow", u"\u0420\u0435\u0433\u0438\u0441\u0442\u0440\u044b", None))
         self.action_3.setText(QCoreApplication.translate("MainWindow", u"\u041a\u043e\u0434", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.code), QCoreApplication.translate("MainWindow", u"\u041a\u043e\u0434", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget), QCoreApplication.translate("MainWindow", u"\u0410\u0441\u0441\u0435\u043c\u0431\u043b\u0435\u0440", None))
         self.File.setTitle(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b", None))
         self.Debug_2.setTitle(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043b\u0430\u0434\u043a\u0430", None))
         self.menu_3.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a", None))
         self.menu.setTitle(QCoreApplication.translate("MainWindow", u"\u0412\u043a\u043b\u0430\u0434\u043a\u0438", None))
-        self.reg.setText(QCoreApplication.translate("MainWindow", u"regsiter", None))
-        self.value.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">value</p></body></html>", None))
-        self.line_id.setText(QCoreApplication.translate("MainWindow", u"num", None))
         self.stop.setText("")
         self.run.setText("")
     # retranslateUi
