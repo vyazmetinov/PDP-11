@@ -1,19 +1,18 @@
 from mem import mem, w_read, w_write, b_write, load_data 
 from data_load import mem_dump
-from cpu import unknown_handler, get_operand, set_operand
+from cpu import unknown_handler, get_operand, set_operand, mov_handler, add_handler
 from collections import defaultdict
 
-pc = 0o1000
-reg = [0] * 8
+reg = [0] * 8  # reg[7] используется как PC
 psw = 0
-labels = defaultdict(str) 
+labels = defaultdict(str)
 comments = defaultdict(str)
 
 commands = [
     {'mask': 0o177777, 'opcode': 0o000000, 'name': 'halt', 'handler': lambda: False},
-    {'mask': 0o170000, 'opcode': 0o010000, 'name': 'mov', 'handler': lambda: mov_handler()},
-    {'mask': 0o170000, 'opcode': 0o060000, 'name': 'add', 'handler': lambda: add_handler()},
-    {'mask': 0o000000, 'opcode': 0o177777, 'name': 'unknown', 'handler': lambda: unknown_handler()}
+    {'mask': 0o170000, 'opcode': 0o010000, 'name': 'mov', 'handler': mov_handler},
+    {'mask': 0o170000, 'opcode': 0o060000, 'name': 'add', 'handler': add_handler},
+    {'mask': 0o000000, 'opcode': 0o177777, 'name': 'unknown', 'handler': unknown_handler}
 ]
 
 def load_data_with_metadata():
@@ -72,74 +71,77 @@ def print_state():
     c = (psw >> 0) & 1
     print(f"\nФлаги: N={n} Z={z} V={v} C={c}")
     
-
     print("\nПамять (стек и данные):")
     mem_dump(0o1000, len(mem) - 0o1000)
     
     print("——-" * 20 + "\n")
 
 def execute_instruction():
-    global pc
     try:
-        instruction = w_read(pc)
+        instruction = w_read(reg[7])
     except (ValueError, IndexError):
-        print(f"{pc:06o}: {'??????':6} : memory_error")
+        print(f"{reg[7]:06o}: {'??????':6} : memory_error")
         return False
 
     cmd = next((c for c in commands if (instruction & c['mask']) == c['opcode']), commands[-1])
     
-    args = ""
-    if cmd['name'] == 'mov':
-        src_mode = (instruction >> 6) & 0o7
-        src_reg = (instruction >> 9) & 0o7
-        dst_mode = (instruction >> 0) & 0o7
-        dst_reg = (instruction >> 3) & 0o7
-        args = f"R{src_reg}, R{dst_reg}"
+    # Универсальный разбор аргументов
+    args = []
+    arg_types = [
+        ('ss', 6, 0o7, 9, 0o7),
+        ('dd', 0, 0o7, 3, 0o7),
+    ]
+    
+    arg_info = []
+    for arg_name, mode_shift, mode_mask, reg_shift, reg_mask in arg_types:
+        mode = (instruction >> mode_shift) & mode_mask
+        reg_num = (instruction >> reg_shift) & reg_mask
+        if mode != 0 or reg_num != 0:
+            args.append((mode, reg_num))
+            arg_info.append(f"{arg_name}(mode={mode}, R{reg_num})")
 
-    print(f"\n0) Метка: {labels.get(pc, '')}")
-    print(f"1) Адрес: {pc:06o}")
+    print(f"\n0) Метка: {labels.get(reg[7], '')}")
+    print(f"1) Адрес: {reg[7]:06o}")
     print(f"2) Слово команды: {instruction:06o}")
-    print(f"3) Аргументы: {args}")
-    print(f"4) Комментарий: {comments.get(pc, '')}")
-    
+    print(f"3) Аргументы: {', '.join(arg_info)}")
+    print(f"4) Комментарий: {comments.get(reg[7], '')}")
 
-    result = cmd['handler']()
+    # Выполнение команды
+    result = cmd['handler'](*args)
     
-
+    # Увеличение PC после выполнения
+    reg[7] += 2
+    
     print_state()
-    
     return result
 
-def mov_handler():
-    global pc
-    instruction = w_read(pc)
-    src_mode = (instruction >> 6) & 0o7
-    src_reg = (instruction >> 9) & 0o7
-    dst_mode = (instruction >> 0) & 0o7
-    dst_reg = (instruction >> 3) & 0o7
+def setNZ(value):
+    global psw
+    psw &= ~0b1100
+    psw |= ((value & 0x8000) >> 12) | ((value == 0) << 2)
+
+def mov_handler(*args):
+    if len(args) != 2:
+        return False
     
-    src = get_operand(src_mode, src_reg)
-    set_operand(dst_mode, dst_reg, src)
+    src_mode, src_reg = args[0]
+    dst_mode, dst_reg = args[1]
     
-    pc += 2
+    src_val = get_operand(src_mode, src_reg)
+    set_operand(dst_mode, dst_reg, src_val)
     return True
 
-def add_handler():
-    global pc, psw
-    instruction = w_read(pc)
-    src_mode = (instruction >> 6) & 0o7
-    src_reg = (instruction >> 9) & 0o7
-    dst_reg = (instruction >> 0) & 0o7
+def add_handler(*args):
+    if len(args) != 2:
+        return False
     
-    src = get_operand(src_mode, src_reg)
-    dst = reg[dst_reg]
-    res = (dst + src) & 0xFFFF
+    src_mode, src_reg = args[0]
+    dst_mode, dst_reg = args[1]
     
-
-    psw = 0
-    psw |= (res >> 15) << 3
-    psw |= (res == 0) << 2
+    src_val = get_operand(src_mode, src_reg)
+    dst_val = get_operand(dst_mode, dst_reg)
+    res = (dst_val + src_val) & 0xFFFF
     
-    reg[dst_reg] = res
-    pc += 2
+    setNZ(res)
+    set_operand(dst_mode, dst_reg, res)
     return True
