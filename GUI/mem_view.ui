@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MemoryView</class>
+ <widget class="QDockWidget" name="MemoryView">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Память</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="2" column="0" colspan="2">
+     <widget class="QTableView" name="table"/>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="from_item"/>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="from_label">
+      <property name="text">
+       <string>От</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="to_label">
+      <property name="text">
+       <string>До</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="to_item"/>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
