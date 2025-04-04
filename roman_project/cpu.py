@@ -1,29 +1,37 @@
 from mem import w_read, w_write
 
-pc = 0o1000
-reg = [0] * 8
+reg = [0] * 8  # reg[7] используется как PC
 psw = 0
 
-def get_operand(mode, reg_num):
-    if mode == 0:  # Регистровый режим
-        return reg[reg_num]
-    elif mode == 1:  # Косвенный регистровый
-        addr = reg[reg_num]
-        return w_read(addr)
-    else:
-        raise ValueError(f"Неизвестный режим адресации: {mode}")
+def trace(message: str):
+    """Функция трассировки для отладки"""
+    print(f"[TRACE] {message}")
 
-def set_operand(mode, reg_num, value):
-    if mode == 0:
-        reg[reg_num] = value
-    elif mode == 1:
-        addr = reg[reg_num]
-        w_write(addr, value)
-    else:
-        raise ValueError(f"Неизвестный режим адресации: {mode}")
+def get_operand(mode: int, reg_num: int) -> int:
+    """Получение операнда с использованием match-case"""
+    match mode:
+        case 0:  
+            trace(f'r{reg_num}')
+            return reg[reg_num]
+        case 1:  
+            addr = reg[reg_num]
+            return w_read(addr)
+        case _:
+            raise ValueError(f"Неизвестный режим адресации: {mode}")
 
-def unknown_handler():
-    global pc
-    print(f"Неизвестная команда по адресу {pc:06o}")
-    pc += 2
+def set_operand(mode: int, reg_num: int, value: int):
+    """Установка значения операнда с использованием match-case"""
+    match mode:
+        case 0: 
+            reg[reg_num] = value
+        case 1: 
+            addr = reg[reg_num]
+            w_write(addr, value)
+        case _:
+            raise ValueError(f"Неизвестный режим адресации: {mode}")
+
+def unknown_handler() -> bool:
+    """Обработчик неизвестных команд с использованием reg[7]"""
+    print(f"Неизвестная команда по адресу {reg[7]:06o}")
+    reg[7] += 2
     return True
