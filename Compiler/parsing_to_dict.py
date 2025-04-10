@@ -132,3 +132,43 @@ class PDP11Parser:
             raise ValueError(f"Команда {cmd} требует 2 аргумента")  # Проверяем количество аргументов для mov, add, sub
         elif cmd == 'inc' and len(result.get('args', [])) != 1:
             raise ValueError("Команда inc требует 1 аргумента")  # Проверяем количество аргументов для inc
+            
+    result_dict = check_none(temp_dict)
+
+    check(result_dict)
+
+    return result_dict
+
+
+def parse_test():
+    strs = [
+        "mov #2, R0 ;R0 = 2",
+        "mov #3, R1 ;R1 = 3",
+        "add R0, R1 ; R1 = R0 + R1",
+        "loop: add #1, R0",
+        "loop  : add #1, R0",
+        "halt ;    остановка процессора",
+        "halt",
+        "add #10, R3",
+        "sub R1",
+        "mov (R0), R1",
+        "mov (R0)+, R1",
+        "mov -(R0), R1",
+        "mov @R0, R1",
+        "mov @-(R0), R1",
+        "inc @  (R3)+",
+        "inc -(R3)",
+        "inc 2(R3)",
+        "inc @ 2(R3)",
+        "mov @#100,R0",
+        "mov 100, R0",
+        "mov @100,R0",
+        "add R0, R1"
+
+    ]
+    for i in strs:
+        print(i, parse_to_dict(i))
+
+
+if __name__ == "__main__":
+    parse_test()
