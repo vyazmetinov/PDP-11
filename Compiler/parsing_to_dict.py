@@ -11,7 +11,7 @@ class Data:
     @classmethod
     def is_valid_register(cls, reg):
         """
-        Проверяем, является ли данная строка допустимым именем регистра (без учета регистра).
+        Проверяем, является ли данная строка допустимым именем регистра.
         """
         return reg.upper() in cls.registers
 
