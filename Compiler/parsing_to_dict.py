@@ -2,200 +2,133 @@ import pyparsing as pp
 
 
 class Data:
-    labels = frozenset({"loop"})
-    command = frozenset({"mov", "add", "sub", "halt", "inc"})
-    different_parameters = frozenset(
-        {f'(R{x})' for x in range(8)} |
-        {f'(R{x})+' for x in range(8)} |
-        {f'@R{x}' for x in range(8)} |
-        {f'@(R{x})+' for x in range(8)} |
-        {f'@R{x}' for x in range(8)} |
-        {f'-(R{x})' for x in range(8)} |
-        {f'@-(R{x})' for x in range(8)} |
-        {f'2R{x}' for x in range(8)} |
-        {f'2(R{x})' for x in range(8)} |
-        {f'@2(R{x})' for x in range(8)} |
-        {str(x) for x in range(65536)} |
-        {f'@{x}' for x in range(65536)}
-    )
-    parameters = frozenset(
-        {"R0", "R1", "R2", "R3", "R4", "R5",
-         "R6", "R7"} | different_parameters
-    )
-    values = frozenset(
-        {f'#{x}' for x in range(11)} |
-        {f'@#{x}'for x in range(-128, 128)} |
-        {str(x) for x in range(65536)}
-    )
+    """
+    Здесь мы определяем допустимые команды и регистры.
+    """
+    commands = {"mov", "add", "sub", "halt", "inc"}  # Набор допустимых команд
+    registers = {f"R{x}" for x in range(8)}  # Набор допустимых имен регистров (R0 - R7)
 
     @classmethod
-    def is_valid_value(cls, val):
-        return val in cls.values
-
-    @classmethod
-    def is_valid_label(cls, lbs):
-        return lbs in cls.labels
-
-    @classmethod
-    def is_valid_command(cls, cmd):
-        return cmd in cls.command
-
-    @classmethod
-    def is_valid_parameter(cls, prm):
-        return str(prm) in cls.parameters
+    def is_valid_register(cls, reg):
+        """
+        Проверяем, является ли данная строка допустимым именем регистра (без учета регистра).
+        """
+        return reg.upper() in cls.registers
 
 
-class BlocksOfRule:
-    @classmethod
-    def init_blocks(cls):
-        cls.label = pp.Word(pp.alphas) + pp.Suppress(":")
-        cls.command_name = pp.Word(pp.alphas).setResultsName("command")
+class PDP11Parser:
+    def __init__(self):
+        self.init_grammar()
 
-        r_num = pp.Word(pp.nums)
-        r_prefix = pp.Optional(pp.Literal("@") + pp.Optional(pp.White()))
-        r_suffix = pp.Optional(pp.Literal("+"))
-        r_body = pp.CaselessLiteral("R") + r_num
-        cls.numeric_address = pp.Word(pp.nums).setParseAction(lambda t: int(t[0]))
-        cls.absolute_address = pp.Combine(
-            pp.Literal("@") + pp.Word(pp.nums)
-        ).setParseAction(lambda t: t[0])
+    def init_grammar(self):
+        # Базовые элементы
+        identifier = pp.Word(pp.alphas + "_", pp.alphanums + "_")  # Идентификатор (метка, переменная)
+        number = pp.Combine(
+            pp.Optional(pp.oneOf("+ -")) + pp.Word(pp.nums)  # Обрабатывает числа со знаком
+        ).addParseAction(lambda t: int(t[0]))  # Преобразует разобранное число в целое число
 
-        cls.register = pp.Combine(
-            r_prefix +
-            pp.Optional(r_num + pp.Optional(pp.White())) +
-            pp.Optional(pp.Literal("-") + pp.Optional(pp.White())) +
-            pp.Optional(pp.Literal("@") + pp.Optional(pp.White())) +
-            pp.Optional(pp.Literal("(") + pp.Optional(pp.White())) +
-            r_body +
-            pp.Optional(pp.Literal(")") + pp.Optional(pp.White())) +
-            r_suffix
-        ).setParseAction(lambda t: ''.join(t[0].split()))
-
-        cls.immediate_val = pp.Combine(
-            pp.Optional(pp.Literal("@") + pp.Optional(pp.White())) +
-            pp.Literal("#") +
-            r_num
-        ).setParseAction(lambda t: ''.join(t[0].split()))
-
-        cls.register_first_command = (cls.register |
-                                      cls.immediate_val |
-                                      cls.numeric_address |
-                                      cls.absolute_address
-                                      )
-        cls.register_second_command = (cls.register |
-                                       cls.immediate_val |
-                                       cls.numeric_address |
-                                       cls.absolute_address
-                                       )
-
-        cls.literal_comma = pp.Suppress(",")
-        cls.comment = (
-                pp.Suppress(";") +
-                pp.Optional(pp.White()).suppress() +
-                pp.restOfLine().setResultsName("comment")
-                .setParseAction(lambda tokens: str(tokens[0]).strip())
+        reg = pp.Combine(
+            pp.CaselessLiteral("R") + pp.Word(pp.nums)  # Соответствует именам регистров (например, R0, R1)
         )
 
+        # Способы адресации
+        immediate = pp.Combine("#" + (number | identifier))  # Непосредственное значение (например, #10, #метка)
+        absolute = pp.Combine("@" + pp.Optional("#") + (number | identifier))  # Абсолютный адрес (например, @1000, @#variable)
 
-BlocksOfRule.init_blocks()
+        reg_deferred = pp.Combine("(" + reg + ")") | pp.Combine("@" + reg)  # Регистровая адресация (например, (R0), @R1)
 
-
-def parse_line():
-    rule = (
-        pp.Optional(BlocksOfRule.label.setResultsName("label")) +
-        BlocksOfRule.command_name +
-
-        pp.Optional(
-            BlocksOfRule.register_first_command +
-            pp.Optional(BlocksOfRule.literal_comma +
-                        BlocksOfRule.register_second_command)
-        ).setResultsName("arguments") +
-
-        pp.Optional(BlocksOfRule.comment.setResultsName("comment"))
-    )
-    return rule
+        auto_inc_indirect = pp.Combine(
+            "@" + pp.Optional(pp.White()) +
+            "(" + pp.Optional(pp.White()) +
+            reg +
+            pp.Optional(pp.White()) + ")+"
+        ).setParseAction(lambda t: '@(' + t[0][1:].replace(" ", "") + ')+') #  @(R0)+
 
 
-def check(result_dict):
-    for k in result_dict.keys():
-        if k == "label":
-            if not Data.is_valid_label(result_dict[k]):
-                raise ValueError(f"Unknown label: {result_dict[k]}")
-        if k == "command_name":
-            if not Data.is_valid_command(result_dict[k]):
-                raise ValueError(f"Unknown command name: {result_dict[k]}")
-        if k == "parameters":
-            for param in result_dict[k]:
-                if not Data.is_valid_parameter(param) and not Data.is_valid_value(param):
-                    raise ValueError(f"Unknown parameter: {param}")
-                if (result_dict["command_name"] == "add") and \
-                        sum([result_dict[k].count(x) for x in Data.values]) == 2:
-                    raise ValueError("the source and destination cannot both be #")
+        auto_inc = pp.Combine(
+            "(" + pp.Optional(pp.White()) +
+            reg +
+            pp.Optional(pp.White()) + ")+"
+        ).setParseAction(lambda t: t[0].replace(" ", ""))  # Автоинкремент (например, (R0)+)
 
+        auto_dec = pp.Combine(
+            "-" + "(" + reg + ")"
+        ).setParseAction(lambda t: t[0].replace(" ", ""))  # Автодекремент (например, -(R1))
 
-def check_none(dictionary):
-    return {k: v for k, v in dictionary.items() if
-            v is not None and
-            not (isinstance(v, str) and v == 'None') and
-            not (isinstance(v, list) and not v)
-            }
+        auto_dec_indirect = pp.Combine(
+            "@-" + "(" + reg + ")"
+        ).setParseAction(lambda t: t[0].replace(" ", ""))  # Косвенный автодекремент  @-(R1)
 
+        indexed = pp.Combine(
+            pp.Optional(number, default="0") +
+            "(" + reg + ")" +
+            pp.Optional("+", default="")
+        )   #индексированная адресация
 
-def parse_to_dict(line):
-    parser = parse_line()
-    result = parser.parseString(line, parseAll=True)
+        parameter = (
+            immediate |
+            absolute |
+            auto_inc_indirect |
+            auto_inc |
+            auto_dec_indirect |
+            auto_dec |
+            reg_deferred |
+            indexed |
+            reg |
+            number
+        )   # параметр может быть чем угодно
 
-    arguments = result.get("arguments", [])
-    parameters = []
+        label = (identifier + pp.Suppress(":")).setResultsName("label")  # Метка (идентификатор, за которым следует двоеточие)
 
-    if len(arguments) > 0:
-        parameters.append(arguments[0])
-    if len(arguments) > 1:
-        parameters.append(arguments[1])
+        command = pp.oneOf(list(Data.commands), caseless=True).setResultsName("command")  # Команда (из списка допустимых команд)
 
-    temp_dict = {
-        "label": result.get("label", [None])[0],
-        "command_name": result.command,
+        args = pp.Group(
+            parameter + pp.Suppress(",") + parameter
+        ).setResultsName("args") | pp.Group(parameter).setResultsName("args") # Аргументы команды
 
-        "parameters": parameters,
-        "comment": str(*result.get("comment", [None]))
-    }
+        comment = pp.Suppress(";") + pp.restOfLine.setResultsName("comment")  # Комментарий (начинается с ";")
 
-    result_dict = check_none(temp_dict)
+        self.parser = pp.Optional(label) + command + pp.Optional(args) + pp.Optional(comment)
 
-    check(result_dict)
+    def parse(self, line):
+        """
+        Разбирает строку ассемблера и возвращает словарь с результатами разбора.
+        """
+        try:
+            result = self.parser.parseString(line, parseAll=True).asDict()  # Разбирает строку и преобразует результаты в словарь
+            self.post_process(result)  # Выполняет постобработку результатов
+            self.validate(result)  # Выполняет валидацию результатов
+            return result
+        except pp.ParseException as e:
+            return {"error": str(e)}  # Возвращает сообщение об ошибке при неудачном разборе
 
-    return result_dict
+    def post_process(self, result):
+        """
+        Выполняет постобработку результатов разбора, например, нормализует регистры.
+        """
+        if 'args' in result:  # Если в результате есть аргументы
+            args = []
+            for arg in result['args']:
+                if isinstance(arg, list):
+                    processed = arg[0]
+                else:
+                    processed = ''.join(str(arg).split()) #Убираем пробелы
 
+                if processed.upper().startswith('R'): # Приводим к верхнему регистру
+                    processed = processed.upper()
+                args.append(processed)
+            result['args'] = args  # Обновляем аргументы в результате
 
-def parse_test():
-    strs = [
-        "mov #2, R0 ;R0 = 2",
-        "mov #3, R1 ;R1 = 3",
-        "add R0, R1 ; R1 = R0 + R1",
-        "loop: add #1, R0",
-        "loop  : add #1, R0",
-        "halt ;    остановка процессора",
-        "halt",
-        "add #10, R3",
-        "sub R1",
-        "mov (R0), R1",
-        "mov (R0)+, R1",
-        "mov -(R0), R1",
-        "mov @R0, R1",
-        "mov @-(R0), R1",
-        "inc @  (R3)+",
-        "inc -(R3)",
-        "inc 2(R3)",
-        "inc @ 2(R3)",
-        "mov @#100,R0",
-        "mov 100, R0",
-        "mov @100,R0",
-        "add R0, R1"
-
-    ]
-    for i in strs:
-        print(i, parse_to_dict(i))
-
-
-parse_test()
+    def validate(self, result):
+        """
+        Выполняет корректность результатов разбора
+        """
+        if 'args' in result:
+            for arg in result['args']:
+                if isinstance(arg, str) and arg.upper() in {'R8', 'R9'}:
+                    raise ValueError("Недопустимый регистр (допустимы R0-R7)")
+        cmd = result['command'].lower()  # Получаем команду в нижнем регистре
+        if cmd in {'mov', 'add', 'sub'} and len(result.get('args', [])) != 2:
+            raise ValueError(f"Команда {cmd} требует 2 аргумента")  # Проверяем количество аргументов для mov, add, sub
+        elif cmd == 'inc' and len(result.get('args', [])) != 1:
+            raise ValueError("Команда inc требует 1 аргумента")  # Проверяем количество аргументов для inc
