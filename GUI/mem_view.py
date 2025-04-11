@@ -10,7 +10,8 @@ import ui_mem_view
 
 
 class MyModel_1(QAbstractTableModel):
-
+    first_id = 0x001000
+    last_id = 0x001022
     def rowCount(self, parent: QModelIndex):
         return 3
     def columnCount(self, parent: QModelIndex):
@@ -23,6 +24,7 @@ class MyModel_1(QAbstractTableModel):
     def headerData(self, col, orientation, role):
         if role == Qt.ItemDataRole.DisplayRole and orientation == Qt.Orientation.Horizontal:
             return ["Адрес", "Значение"][col]
+
 
 class MemoryView(PySide6.QtWidgets.QDockWidget, ui_mem_view.Ui_MemoryView):
     def __init__(self, parent: None):

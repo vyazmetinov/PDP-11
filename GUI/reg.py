@@ -8,6 +8,9 @@ import numpy as np
 import ui_reg
 
 class MyModel(QAbstractTableModel):
+    data_set = dict([
+
+    ])
 
     def rowCount(self, parent: QModelIndex):
         return 3
