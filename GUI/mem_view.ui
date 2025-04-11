@@ -45,5 +45,42 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>from_item</sender>
+   <signal>editingFinished()</signal>
+   <receiver>MemoryView</receiver>
+   <slot>setStartAddress()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>332</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>319</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>to_item</sender>
+   <signal>editingFinished()</signal>
+   <receiver>MemoryView</receiver>
+   <slot>setEndAddress()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>332</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>319</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>setStartAddress()</slot>
+  <slot>setEndAddress()</slot>
+ </slots>
 </ui>

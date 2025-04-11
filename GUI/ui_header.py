@@ -17,13 +17,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QDockWidget, QGridLayout, QHBoxLayout,
     QPushButton, QSizePolicy, QSpinBox, QWidget)
-import res_rc
 
-class Ui_header(object):
-    def setupUi(self, DockWidget):
-        if not DockWidget.objectName():
-            DockWidget.setObjectName(u"DockWidget")
-        DockWidget.resize(640, 480)
+class Ui_Header(object):
+    def setupUi(self, Header):
+        if not Header.objectName():
+            Header.setObjectName(u"Header")
+        Header.resize(640, 480)
         self.dockWidgetContents = QWidget()
         self.dockWidgetContents.setObjectName(u"dockWidgetContents")
         self.gridLayout = QGridLayout(self.dockWidgetContents)
@@ -42,18 +41,18 @@ class Ui_header(object):
 "}")
         self.horizontalLayout_2 = QHBoxLayout(self.custom_play)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.pushButton = QPushButton(self.custom_play)
-        self.pushButton.setObjectName(u"pushButton")
+        self.runButton = QPushButton(self.custom_play)
+        self.runButton.setObjectName(u"runButton")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
-        self.pushButton.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.runButton.sizePolicy().hasHeightForWidth())
+        self.runButton.setSizePolicy(sizePolicy)
         icon = QIcon()
         icon.addFile(u"icons/skip_next.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.pushButton.setIcon(icon)
+        self.runButton.setIcon(icon)
 
-        self.horizontalLayout_2.addWidget(self.pushButton, 0, Qt.AlignTop)
+        self.horizontalLayout_2.addWidget(self.runButton, 0, Qt.AlignTop)
 
         self.speed = QSpinBox(self.custom_play)
         self.speed.setObjectName(u"speed")
@@ -65,41 +64,40 @@ class Ui_header(object):
 
         self.horizontalLayout.addWidget(self.custom_play, 0, Qt.AlignTop)
 
-        self.run = QPushButton(self.horizontalWidget)
-        self.run.setObjectName(u"run")
-        sizePolicy.setHeightForWidth(self.run.sizePolicy().hasHeightForWidth())
-        self.run.setSizePolicy(sizePolicy)
+        self.stepButton = QPushButton(self.horizontalWidget)
+        self.stepButton.setObjectName(u"stepButton")
+        sizePolicy.setHeightForWidth(self.stepButton.sizePolicy().hasHeightForWidth())
+        self.stepButton.setSizePolicy(sizePolicy)
         icon1 = QIcon()
         icon1.addFile(u":icons/icons/play_arrow.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.run.setIcon(icon1)
+        self.stepButton.setIcon(icon1)
 
-        self.horizontalLayout.addWidget(self.run, 0, Qt.AlignVCenter)
+        self.horizontalLayout.addWidget(self.stepButton, 0, Qt.AlignVCenter)
 
-        self.stop = QPushButton(self.horizontalWidget)
-        self.stop.setObjectName(u"stop")
-        sizePolicy.setHeightForWidth(self.stop.sizePolicy().hasHeightForWidth())
-        self.stop.setSizePolicy(sizePolicy)
-        self.stop.setEnabled(False)
+        self.stopButton = QPushButton(self.horizontalWidget)
+        self.stopButton.setObjectName(u"stopButton")
+        sizePolicy.setHeightForWidth(self.stopButton.sizePolicy().hasHeightForWidth())
+        self.stopButton.setSizePolicy(sizePolicy)
         icon2 = QIcon()
         icon2.addFile(u":icons/icons/crop_5_4.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.stop.setIcon(icon2)
+        self.stopButton.setIcon(icon2)
 
-        self.horizontalLayout.addWidget(self.stop, 0, Qt.AlignVCenter)
+        self.horizontalLayout.addWidget(self.stopButton, 0, Qt.AlignVCenter)
 
 
         self.gridLayout.addWidget(self.horizontalWidget, 0, 0, 1, 1, Qt.AlignRight|Qt.AlignTop)
 
-        DockWidget.setWidget(self.dockWidgetContents)
+        Header.setWidget(self.dockWidgetContents)
 
-        self.retranslateUi(DockWidget)
+        self.retranslateUi(Header)
 
-        QMetaObject.connectSlotsByName(DockWidget)
+        QMetaObject.connectSlotsByName(Header)
     # setupUi
 
-    def retranslateUi(self, DockWidget):
-        DockWidget.setWindowTitle(QCoreApplication.translate("DockWidget", u"DockWidget", None))
-        self.pushButton.setText("")
-        self.run.setText("")
-        self.stop.setText("")
+    def retranslateUi(self, Header):
+        Header.setWindowTitle(QCoreApplication.translate("Header", u"DockWidget", None))
+        self.runButton.setText("")
+        self.stepButton.setText("")
+        self.stopButton.setText("")
     # retranslateUi
 

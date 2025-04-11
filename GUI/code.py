@@ -22,3 +22,9 @@ class Code(PySide6.QtWidgets.QWidget, ui_code.Ui_Code):
         # Получаем текст из QTextEdit (замените self.code на правильное имя, если требуется)
         text = self.code.toPlainText()
         print(text)
+
+    def setText(self, text):
+        return self.code.setText(text)
+
+    def text(self):
+        return self.code.toPlainText()

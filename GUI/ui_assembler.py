@@ -15,35 +15,29 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QHeaderView, QPushButton,
-    QSizePolicy, QTableView, QWidget)
+from PySide6.QtWidgets import (QApplication, QGridLayout, QHeaderView, QSizePolicy,
+    QTableView, QWidget)
 
 class Ui_Assembler(object):
-    def setupUi(self, Form):
-        if not Form.objectName():
-            Form.setObjectName(u"Form")
-        Form.resize(640, 480)
-        self.gridLayout = QGridLayout(Form)
+    def setupUi(self, Assembler):
+        if not Assembler.objectName():
+            Assembler.setObjectName(u"Assembler")
+        Assembler.resize(640, 480)
+        self.gridLayout = QGridLayout(Assembler)
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.tableView = QTableView(Form)
+        self.tableView = QTableView(Assembler)
         self.tableView.setObjectName(u"tableView")
 
-        self.gridLayout.addWidget(self.tableView, 1, 0, 1, 1)
-
-        # self.pushButton = QPushButton(Form)
-        # self.pushButton.setObjectName(u"pushButton")
-
-        # self.gridLayout.addWidget(self.pushButton, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.tableView, 0, 0, 1, 1)
 
 
-        self.retranslateUi(Form)
+        self.retranslateUi(Assembler)
 
-        QMetaObject.connectSlotsByName(Form)
+        QMetaObject.connectSlotsByName(Assembler)
     # setupUi
 
-    def retranslateUi(self, Form):
-        Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        # self.pushButton.setText(QCoreApplication.translate("Form", u"PushButton", None))
+    def retranslateUi(self, Assembler):
+        Assembler.setWindowTitle(QCoreApplication.translate("Assembler", u"Form", None))
     # retranslateUi
 
