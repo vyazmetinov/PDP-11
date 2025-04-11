@@ -12,5 +12,6 @@
     <file>icons/match_case.svg</file>
     <file>icons/play_arrow.svg</file>
     <file>icons/spellcheck.svg</file>
+    <file>icons/skip_next.svg</file>
   </qresource>
 </RCC>

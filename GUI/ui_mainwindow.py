@@ -16,12 +16,13 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QDockWidget, QFrame, QGridLayout,
-    QHBoxLayout, QLayout, QMainWindow, QMenu,
-    QMenuBar, QPushButton, QSizePolicy, QTabWidget,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QDockWidget, QGridLayout, QLayout,
+    QMainWindow, QMenu, QMenuBar, QSizePolicy,
+    QTabWidget, QWidget)
 
+from assembler import Assembler
 from code import Code
+from header import Header
 from mem_view import MemoryView
 from reg import Registers
 import res_rc
@@ -30,7 +31,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1006, 714)
+        MainWindow.resize(968, 714)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -86,7 +87,8 @@ class Ui_MainWindow(object):
         self.code = Code(MainWindow)
         self.code.setObjectName(u"code")
         self.tabWidget.addTab(self.code, "")
-        self.widget = QWidget()
+
+        self.widget = Assembler(MainWindow)
         self.widget.setObjectName(u"widget")
         self.tabWidget.addTab(self.widget, "")
 
@@ -95,7 +97,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1006, 24))
+        self.menubar.setGeometry(QRect(0, 0, 968, 36))
         self.File = QMenu(self.menubar)
         self.File.setObjectName(u"File")
         self.Debug_2 = QMenu(self.menubar)
@@ -105,57 +107,21 @@ class Ui_MainWindow(object):
         self.menu = QMenu(self.menubar)
         self.menu.setObjectName(u"menu")
         MainWindow.setMenuBar(self.menubar)
-        self.header_2 = QDockWidget(MainWindow)
+        self.header_2 = Header(MainWindow)
         self.header_2.setObjectName(u"header_2")
-        self.header_2.setMinimumSize(QSize(200, 80))
-        self.dockWidgetContents_11 = QWidget()
-        self.dockWidgetContents_11.setObjectName(u"dockWidgetContents_11")
-        self.header_frame = QFrame(self.dockWidgetContents_11)
-        self.header_frame.setObjectName(u"header_frame")
-        self.header_frame.setGeometry(QRect(-20, 0, 1001, 80))
-        self.header_frame.setMinimumSize(QSize(0, 80))
-        self.header_frame.setStyleSheet(u"#header_2{\n"
+        self.header_2.setStyleSheet(u"#header_2{\n"
 "background-color: white;\n"
 "}")
-        self.horizontalLayout_2 = QHBoxLayout(self.header_frame)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.header_item = QFrame(self.header_frame)
-        self.header_item.setObjectName(u"header_item")
-        self.header_item.setFrameShape(QFrame.NoFrame)
-        self.header_item.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_3 = QHBoxLayout(self.header_item)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.stop = QPushButton(self.header_item)
-        self.stop.setObjectName(u"stop")
-        self.stop.setMaximumSize(QSize(60, 40))
-        icon = QIcon()
-        icon.addFile(u":/icons/icons/crop_5_4.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.stop.setIcon(icon)
-
-        self.horizontalLayout_3.addWidget(self.stop)
-
-        self.run = QPushButton(self.header_item)
-        self.run.setObjectName(u"run")
-        self.run.setMaximumSize(QSize(60, 40))
-        icon1 = QIcon()
-        icon1.addFile(u":/icons/icons/play_arrow.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.run.setIcon(icon1)
-
-        self.horizontalLayout_3.addWidget(self.run)
-
-
-        self.horizontalLayout_2.addWidget(self.header_item, 0, Qt.AlignRight|Qt.AlignTop)
-
-        self.header_2.setWidget(self.dockWidgetContents_11)
+        self.header_2.setFloating(False)
+        self.header_2.setFeatures(QDockWidget.NoDockWidgetFeatures)
         MainWindow.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, self.header_2)
-        self.dockWidget = Registers(MainWindow)
-        self.dockWidget.setObjectName(u"dockWidget")
-        MainWindow.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dockWidget)
-        self.dockWidget_3 = MemoryView(MainWindow)
-        self.dockWidget_3.setObjectName(u"dockWidget_3")
-        self.dockWidget_3.setAllowedAreas(Qt.BottomDockWidgetArea)
-        MainWindow.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.dockWidget_3)
+        self.registers = Registers(MainWindow)
+        self.registers.setObjectName(u"registers")
+        MainWindow.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.registers)
+        self.memoryView = MemoryView(MainWindow)
+        self.memoryView.setObjectName(u"memoryView")
+        self.memoryView.setAllowedAreas(Qt.AllDockWidgetAreas)
+        MainWindow.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.memoryView)
 
         self.menubar.addAction(self.File.menuAction())
         self.menubar.addAction(self.Debug_2.menuAction())
@@ -175,7 +141,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -200,7 +166,5 @@ class Ui_MainWindow(object):
         self.Debug_2.setTitle(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043b\u0430\u0434\u043a\u0430", None))
         self.menu_3.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a", None))
         self.menu.setTitle(QCoreApplication.translate("MainWindow", u"\u0412\u043a\u043b\u0430\u0434\u043a\u0438", None))
-        self.stop.setText("")
-        self.run.setText("")
     # retranslateUi
 
