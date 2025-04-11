@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DockWidget</class>
- <widget class="QDockWidget" name="DockWidget">
+ <class>Header</class>
+ <widget class="QDockWidget" name="Header">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -52,7 +52,7 @@ border-radius: 10px;
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item alignment="Qt::AlignTop">
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="runButton">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -82,7 +82,7 @@ border-radius: 10px;
         </widget>
        </item>
        <item alignment="Qt::AlignVCenter">
-        <widget class="QPushButton" name="run">
+        <widget class="QPushButton" name="stepButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -99,7 +99,7 @@ border-radius: 10px;
         </widget>
        </item>
        <item alignment="Qt::AlignVCenter">
-        <widget class="QPushButton" name="stop">
+        <widget class="QPushButton" name="stopButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -121,8 +121,10 @@ border-radius: 10px;
    </layout>
   </widget>
  </widget>
- <resources>
-  <include location="res_rc.qrc"/>
- </resources>
+ <resources/>
  <connections/>
+ <slots>
+  <signal>assemblerRunning()</signal>
+  <slot>assemblerRun()</slot>
+ </slots>
 </ui>
