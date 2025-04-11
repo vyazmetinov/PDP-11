@@ -57,6 +57,8 @@ class Ui_MemoryView(object):
         MemoryView.setWidget(self.dockWidgetContents)
 
         self.retranslateUi(MemoryView)
+        self.from_item.editingFinished.connect(MemoryView.setStartAddress)
+        self.to_item.editingFinished.connect(MemoryView.setEndAddress)
 
         QMetaObject.connectSlotsByName(MemoryView)
     # setupUi
