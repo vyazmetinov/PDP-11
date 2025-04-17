@@ -21,9 +21,29 @@ class MyModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole:
             return index.row() + index.column()
         return None
+
+    def setData(self, index, value, role):
+        if role == Qt.ItemDataRole.EditRole:
+            try:
+                value = int(value, base=8)
+            except ValueError:
+                return False
+
+            if not(0 <= value <= 3):
+                return False
+            print(f"Register {index.row()}, changed to {value}")
+            return True
+        return False
+
     def headerData(self, col, orientation, role):
         if role == Qt.ItemDataRole.DisplayRole and orientation == Qt.Orientation.Horizontal:
             return ["Регистр", "Значение"][col]
+
+    def flags(self, index):
+        default_flags = QAbstractTableModel.flags(self, index)
+        if index.column() == 1:
+            return PySide6.QtCore.Qt.ItemFlag.ItemIsEditable | QAbstractTableModel.flags(self, index)
+        return default_flags
 
 class Registers(PySide6.QtWidgets.QDockWidget, ui_reg.Ui_Registers):
     def __init__(self, parent: None):

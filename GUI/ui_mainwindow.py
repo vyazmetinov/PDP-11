@@ -37,11 +37,10 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setMaximumSize(QSize(1920, 1080))
         MainWindow.setSizeIncrement(QSize(0, 0))
         MainWindow.setBaseSize(QSize(0, 0))
-        self.Open = QAction(MainWindow)
-        self.Open.setObjectName(u"Open")
+        self.actionOpen = QAction(MainWindow)
+        self.actionOpen.setObjectName(u"actionOpen")
         self.Create = QAction(MainWindow)
         self.Create.setObjectName(u"Create")
         self.Save = QAction(MainWindow)
@@ -84,11 +83,11 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabShape(QTabWidget.Rounded)
         self.tabWidget.setElideMode(Qt.ElideRight)
         self.tabWidget.setDocumentMode(True)
-        self.code = Code(MainWindow)
+        self.tabWidget.setTabsClosable(False)
+        self.code = Code()
         self.code.setObjectName(u"code")
         self.tabWidget.addTab(self.code, "")
-
-        self.widget = Assembler(MainWindow)
+        self.widget = Assembler()
         self.widget.setObjectName(u"widget")
         self.tabWidget.addTab(self.widget, "")
 
@@ -97,7 +96,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 968, 36))
+        self.menubar.setGeometry(QRect(0, 0, 968, 24))
         self.File = QMenu(self.menubar)
         self.File.setObjectName(u"File")
         self.Debug_2 = QMenu(self.menubar)
@@ -127,7 +126,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.Debug_2.menuAction())
         self.menubar.addAction(self.menu_3.menuAction())
         self.menubar.addAction(self.menu.menuAction())
-        self.File.addAction(self.Open)
+        self.File.addAction(self.actionOpen)
         self.File.addAction(self.Create)
         self.File.addAction(self.Save)
         self.File.addAction(self.Save_as)
@@ -140,8 +139,9 @@ class Ui_MainWindow(object):
         self.menu.addAction(self.action_3)
 
         self.retranslateUi(MainWindow)
+        self.actionOpen.triggered.connect(MainWindow.openFile)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -149,7 +149,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.Open.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043a\u0440\u044b\u0442\u044c", None))
+        self.actionOpen.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043a\u0440\u044b\u0442\u044c", None))
         self.Create.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0437\u0434\u0430\u0442\u044c", None))
         self.Save.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c", None))
         self.Save_as.setText(QCoreApplication.translate("MainWindow", u"\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c \u043a\u0430\u043a", None))

@@ -16,12 +16,6 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="maximumSize">
-   <size>
-    <width>1920</width>
-    <height>1080</height>
-   </size>
-  </property>
   <property name="sizeIncrement">
    <size>
     <width>0</width>
@@ -84,13 +78,16 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideRight</enum>
       </property>
       <property name="documentMode">
        <bool>true</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
       </property>
       <widget class="Code" name="code">
        <attribute name="title">
@@ -112,14 +109,14 @@
      <x>0</x>
      <y>0</y>
      <width>968</width>
-     <height>36</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="File">
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="Open"/>
+    <addaction name="actionOpen"/>
     <addaction name="Create"/>
     <addaction name="Save"/>
     <addaction name="Save_as"/>
@@ -180,7 +177,7 @@ background-color: white;
     <number>1</number>
    </attribute>
   </widget>
-  <action name="Open">
+  <action name="actionOpen">
    <property name="text">
     <string>Открыть</string>
    </property>
@@ -287,7 +284,27 @@ background-color: white;
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="res_rc.qrc"/>
+  <include location="res.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionOpen</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>openFile()</slot>
+ </slots>
 </ui>
