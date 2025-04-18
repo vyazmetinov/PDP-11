@@ -135,3 +135,68 @@ class PDP11Parser:
             raise ValueError(f"Команда {cmd} требует 2 аргумента")
         elif cmd == 'inc' and len(result.get('args', [])) != 1:
             raise ValueError("Команда inc требует 1 аргумента")
+    def parse_arg(self, arg_str: str) -> dict:
+        arg = arg_str.strip().upper()
+        result = {'mode': 0, 'regnum': None, 'additional_value': None}
+        
+        # 1. Обработка регистров (R0-R7, PC, SP)
+        if arg in Data.registers:
+            result['mode'] = 0
+            result['regnum'] = 7 if arg == 'PC' else (6 if arg == 'SP' else int(arg[1]))
+            return result
+        
+        # 2. Обработка чисел (#123, 123, @123)
+        if arg.startswith('#'):
+            try:
+                result['mode'] = 27
+                result['additional_value'] = int(arg[1:])
+                return result
+            except ValueError:
+                pass
+        
+        if arg.startswith('@#'):
+            try:
+                result['mode'] = 37
+                result['additional_value'] = int(arg[2:])
+                return result
+            except ValueError:
+                pass
+        
+        if arg.isdigit() or (arg[0] == '-' and arg[1:].isdigit()):
+            result['mode'] = 37
+            result['additional_value'] = int(arg)
+            return result
+        
+        # 3. Обработка сложных режимов адресации
+        if '(' in arg:
+            # Выделяем регистр
+            reg_part = arg[arg.find('(')+1:arg.find(')')]
+            if reg_part in Data.registers:
+                regnum = 7 if reg_part == 'PC' else (6 if reg_part == 'SP' else int(reg_part[1]))
+                result['regnum'] = regnum
+            
+            # Определяем режим адресации
+            if arg.startswith('@-(') and arg.endswith(')'):
+                result['mode'] = 5
+            elif arg.startswith('-(') and arg.endswith(')'):
+                result['mode'] = 4
+            elif arg.startswith('@(') and arg.endswith(')+'):
+                result['mode'] = 3
+            elif arg.startswith('(') and arg.endswith(')+'):
+                result['mode'] = 2
+            elif arg.startswith('@(') and arg.endswith(')'):
+                result['mode'] = 1
+            elif arg.startswith('(') and arg.endswith(')'):
+                result['mode'] = 1
+            else:
+                # Обработка X(Rn) и @X(Rn)
+                left_part = arg.split('(', 1)[0]
+                if left_part and left_part != '@':
+                    try:
+                        num = int(left_part.replace('@', ''))
+                        result['additional_value'] = num
+                        result['mode'] = 7 if arg.startswith('@') else 6
+                    except ValueError:
+                        pass
+        
+        return result
