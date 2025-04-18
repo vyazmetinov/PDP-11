@@ -8,6 +8,12 @@ import numpy as np
 import ui_reg
 
 class MyModel(QAbstractTableModel):
+<<<<<<< HEAD
+=======
+    data_set = dict([
+
+    ])
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
 
     def rowCount(self, parent: QModelIndex):
         return 3
@@ -18,10 +24,36 @@ class MyModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.DisplayRole:
             return index.row() + index.column()
         return None
+<<<<<<< HEAD
+=======
+
+    def setData(self, index, value, role):
+        if role == Qt.ItemDataRole.EditRole:
+            try:
+                value = int(value, base=8)
+            except ValueError:
+                return False
+
+            if not(0 <= value <= 3):
+                return False
+            print(f"Register {index.row()}, changed to {value}")
+            return True
+        return False
+
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
     def headerData(self, col, orientation, role):
         if role == Qt.ItemDataRole.DisplayRole and orientation == Qt.Orientation.Horizontal:
             return ["Регистр", "Значение"][col]
 
+<<<<<<< HEAD
+=======
+    def flags(self, index):
+        default_flags = QAbstractTableModel.flags(self, index)
+        if index.column() == 1:
+            return PySide6.QtCore.Qt.ItemFlag.ItemIsEditable | QAbstractTableModel.flags(self, index)
+        return default_flags
+
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
 class Registers(PySide6.QtWidgets.QDockWidget, ui_reg.Ui_Registers):
     def __init__(self, parent: None):
         super().__init__(parent)

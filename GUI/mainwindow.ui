@@ -6,7 +6,11 @@
    <rect>
     <x>0</x>
     <y>0</y>
+<<<<<<< HEAD
     <width>1006</width>
+=======
+    <width>968</width>
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
     <height>714</height>
    </rect>
   </property>
@@ -15,12 +19,6 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>1920</width>
-    <height>1080</height>
-   </size>
   </property>
   <property name="sizeIncrement">
    <size>
@@ -92,12 +90,22 @@
       <property name="documentMode">
        <bool>true</bool>
       </property>
+<<<<<<< HEAD
+=======
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
       <widget class="Code" name="code">
        <attribute name="title">
         <string>Код</string>
        </attribute>
       </widget>
+<<<<<<< HEAD
       <widget class="QWidget" name="widget">
+=======
+      <widget class="Assembler" name="widget">
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
        <attribute name="title">
         <string>Ассемблер</string>
        </attribute>
@@ -111,7 +119,11 @@
     <rect>
      <x>0</x>
      <y>0</y>
+<<<<<<< HEAD
      <width>1006</width>
+=======
+     <width>968</width>
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
      <height>24</height>
     </rect>
    </property>
@@ -119,19 +131,20 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="Open"/>
-    <addaction name="Create"/>
-    <addaction name="Save"/>
-    <addaction name="Save_as"/>
-    <addaction name="Close"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionCreate"/>
+    <addaction name="actionSave"/>
+    <addaction name="ationSaveAs"/>
    </widget>
    <widget class="QMenu" name="Debug_2">
     <property name="title">
      <string>Отладка</string>
     </property>
-    <addaction name="Run_2"/>
-    <addaction name="Build"/>
     <addaction name="actionDebug"/>
+    <addaction name="actionBuild"/>
+    <addaction name="actionStep"/>
+    <addaction name="actionRun"/>
+    <addaction name="actionStop"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -150,6 +163,7 @@
    <addaction name="Debug_2"/>
    <addaction name="menu_3"/>
    <addaction name="menu"/>
+<<<<<<< HEAD
   </widget>
   <widget class="QDockWidget" name="header_2">
    <property name="minimumSize">
@@ -257,46 +271,104 @@ background-color: white;
    <attribute name="dockWidgetArea">
     <number>8</number>
    </attribute>
+=======
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
   </widget>
-  <action name="Open">
+  <widget class="Header" name="header_2">
+   <property name="styleSheet">
+    <string notr="true">#header_2{
+background-color: white;
+}</string>
+   </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+  </widget>
+  <widget class="Registers" name="registers">
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+  </widget>
+  <widget class="MemoryView" name="memoryView">
+   <property name="allowedAreas">
+    <set>Qt::AllDockWidgetAreas</set>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+  </widget>
+  <action name="actionOpen">
    <property name="text">
     <string>Открыть</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
-  <action name="Create">
+  <action name="actionCreate">
    <property name="text">
     <string>Создать</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
-  <action name="Save">
+  <action name="actionSave">
    <property name="text">
     <string>Сохранить</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
-  <action name="Save_as">
+  <action name="ationSaveAs">
    <property name="text">
     <string>Сохранить как</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
   </action>
-  <action name="Close">
+  <action name="actionClose">
    <property name="text">
     <string>Зыкрыть</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
   </action>
-  <action name="Run_2">
+  <action name="actionRun">
    <property name="text">
     <string>Запуск</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
   </action>
-  <action name="Build">
+  <action name="actionBuild">
    <property name="text">
     <string>Сборка</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
    </property>
   </action>
   <action name="actionDebug">
    <property name="text">
     <string>Проверка</string>
    </property>
+<<<<<<< HEAD
+=======
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
   </action>
   <action name="action">
    <property name="checkable">
@@ -329,6 +401,25 @@ background-color: white;
    </property>
    <property name="text">
     <string>Код</string>
+<<<<<<< HEAD
+=======
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="text">
+    <string>Стоп</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actionStep">
+   <property name="text">
+    <string>Шаг</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
    </property>
   </action>
  </widget>
@@ -351,9 +442,146 @@ background-color: white;
    <header>code</header>
    <container>1</container>
   </customwidget>
+<<<<<<< HEAD
+=======
+  <customwidget>
+   <class>Header</class>
+   <extends>QDockWidget</extends>
+   <header>header</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Assembler</class>
+   <extends>QWidget</extends>
+   <header>assembler</header>
+   <container>1</container>
+  </customwidget>
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
  </customwidgets>
  <resources>
-  <include location="res_rc.qrc"/>
+  <include location="res.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionOpen</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCreate</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>createFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveFile()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ationSaveAs</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveFileAs()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStep</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>runAssemblyOnce()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStop</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>stopAssembly()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRun</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>runAssembly()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>openFile()</slot>
+  <slot>createFile()</slot>
+  <slot>saveFile()</slot>
+  <slot>saveFileAs()</slot>
+  <slot>runAssemblyOnce()</slot>
+  <slot>stopAssembly()</slot>
+  <slot>runAssembly()</slot>
+ </slots>
 </ui>

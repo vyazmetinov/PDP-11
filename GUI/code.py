@@ -9,6 +9,7 @@ import numpy as np
 import ui_code
 
 
+<<<<<<< HEAD
 class MyModel_2(QAbstractTableModel):
 
     def rowCount(self, parent: QModelIndex):
@@ -33,3 +34,24 @@ class Code(PySide6.QtWidgets.QWidget, ui_code.Ui_Code):
         self.model = MyModel_2()
 
         self.ui = ui_code.Ui_Code()
+=======
+
+class Code(PySide6.QtWidgets.QWidget, ui_code.Ui_Code):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+
+        self.ui = ui_code.Ui_Code()
+        print(self.code.toPlainText())
+
+    def on_run_button_clicked(self):
+        text = self.code.toPlainText()
+        print(text)
+
+
+    def setText(self, text):
+        return self.code.setText(text)
+
+    def text(self):
+        return self.code.toPlainText()
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
