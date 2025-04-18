@@ -80,8 +80,8 @@ class PDP11Parser:
         label = (identifier + pp.Suppress(":")).setResultsName("label", listAllMatches=True)  # Метка (идентификатор, за которым следует двоеточие)
         command = pp.oneOf(list(Data.commands), caseless=True).setResultsName("command") # Команда (из списка допустимых команд)
         args = pp.Group(
-            parameter + pp.Suppress(",") + parameter
-        ).setResultsName("args") | pp.Group(parameter).setResultsName("args") # Аргументы команды
+            pp.Suppress(pp.Optional(',')) + parameter + pp.Suppress(",") + parameter
+        ).setResultsName("args") | pp.Group(parameter).setResultsName("args") #Аргументы команды
         comment = pp.Suppress(";") + pp.restOfLine.setResultsName("comment") # Комментарий (начинается с ";")
 
         self.parser = pp.ZeroOrMore(label) + command + pp.Optional(args) + pp.Optional(comment)
