@@ -1,4 +1,5 @@
 import PySide6
+from PySide6 import QtGui
 from PySide6.QtCore import QAbstractItemModel, QAbstractTableModel, QModelIndex, Qt, QTimer
 from PySide6.QtWidgets import QApplication, QWidget, QTableView
 import numpy as np
@@ -15,8 +16,8 @@ class Header(PySide6.QtWidgets.QDockWidget, ui_header.Ui_Header):
         self.ui = ui_header.Ui_Header()
 
         self.timer = QTimer(self)
-        self.runButton.clicked.connect(lambda: self.timer.start(1000))
-        self.stopButton.clicked.connect(lambda: self.timer.stop())
+
+
 
 
 

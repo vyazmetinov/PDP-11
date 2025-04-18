@@ -16,7 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QDockWidget, QGridLayout, QHBoxLayout,
-    QPushButton, QSizePolicy, QSpinBox, QWidget)
+    QLabel, QPushButton, QSizePolicy, QSpinBox,
+    QWidget)
 
 class Ui_Header(object):
     def setupUi(self, Header):
@@ -32,7 +33,7 @@ class Ui_Header(object):
         self.horizontalWidget.setObjectName(u"horizontalWidget")
         self.horizontalLayout = QHBoxLayout(self.horizontalWidget)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setContentsMargins(0, 0, 10, 0)
         self.custom_play = QWidget(self.horizontalWidget)
         self.custom_play.setObjectName(u"custom_play")
         self.custom_play.setStyleSheet(u"#custom_play{\n"
@@ -58,8 +59,17 @@ class Ui_Header(object):
         self.speed.setObjectName(u"speed")
         sizePolicy.setHeightForWidth(self.speed.sizePolicy().hasHeightForWidth())
         self.speed.setSizePolicy(sizePolicy)
+        self.speed.setAccelerated(True)
+        self.speed.setMinimum(1)
+        self.speed.setMaximum(999)
+        self.speed.setValue(60)
 
         self.horizontalLayout_2.addWidget(self.speed, 0, Qt.AlignTop)
+
+        self.label = QLabel(self.custom_play)
+        self.label.setObjectName(u"label")
+
+        self.horizontalLayout_2.addWidget(self.label)
 
 
         self.horizontalLayout.addWidget(self.custom_play, 0, Qt.AlignTop)
@@ -74,16 +84,6 @@ class Ui_Header(object):
 
         self.horizontalLayout.addWidget(self.stepButton, 0, Qt.AlignVCenter)
 
-        self.stopButton = QPushButton(self.horizontalWidget)
-        self.stopButton.setObjectName(u"stopButton")
-        sizePolicy.setHeightForWidth(self.stopButton.sizePolicy().hasHeightForWidth())
-        self.stopButton.setSizePolicy(sizePolicy)
-        icon2 = QIcon()
-        icon2.addFile(u":icons/icons/crop_5_4.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        self.stopButton.setIcon(icon2)
-
-        self.horizontalLayout.addWidget(self.stopButton, 0, Qt.AlignVCenter)
-
 
         self.gridLayout.addWidget(self.horizontalWidget, 0, 0, 1, 1, Qt.AlignRight|Qt.AlignTop)
 
@@ -97,7 +97,12 @@ class Ui_Header(object):
     def retranslateUi(self, Header):
         Header.setWindowTitle(QCoreApplication.translate("Header", u"DockWidget", None))
         self.runButton.setText("")
+#if QT_CONFIG(whatsthis)
+        self.speed.setWhatsThis("")
+#endif // QT_CONFIG(whatsthis)
+        self.speed.setSpecialValueText("")
+        self.speed.setPrefix("")
+        self.label.setText(QCoreApplication.translate("Header", u"\u041a\u043e\u043c/\u043c\u0438\u043d", None))
         self.stepButton.setText("")
-        self.stopButton.setText("")
     # retranslateUi
 
