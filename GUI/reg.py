@@ -23,6 +23,7 @@ class MyModel(QAbstractTableModel):
         ["R8", 0],
     ]
 
+
     def rowCount(self, parent: QModelIndex):
         return len(self.dataset)
     def columnCount(self, parent: QModelIndex):
@@ -36,8 +37,6 @@ class MyModel(QAbstractTableModel):
             elif index.column() == 1:
                 return self.dataset[index.row()][1]
         return None
-
-
 
     def setData(self, index, value, role):
         if role == Qt.ItemDataRole.EditRole:
@@ -62,7 +61,6 @@ class MyModel(QAbstractTableModel):
         if index.column() == 1:
             return PySide6.QtCore.Qt.ItemFlag.ItemIsEditable | QAbstractTableModel.flags(self, index)
         return default_flags
-
 class Registers(PySide6.QtWidgets.QDockWidget, ui_reg.Ui_Registers):
     def __init__(self, parent: None):
         super().__init__(parent)
