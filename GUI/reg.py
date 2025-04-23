@@ -8,19 +8,36 @@ import numpy as np
 import ui_reg
 
 class MyModel(QAbstractTableModel):
-    data_set = dict([
-
-    ])
+    dataset = [
+        ["N", 0],
+        ["Z", 0],
+        ["V", 0],
+        ["C", 0],
+        ["R1", 0],
+        ["R2", 0],
+        ["R3", 0],
+        ["R4", 0],
+        ["R5", 0],
+        ["R6", 0],
+        ["R7", 0],
+        ["R8", 0],
+    ]
 
     def rowCount(self, parent: QModelIndex):
-        return 3
+        return len(self.dataset)
     def columnCount(self, parent: QModelIndex):
         return 2
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+
         if role == Qt.ItemDataRole.DisplayRole:
-            return index.row() + index.column()
+            if index.column() == 0:
+                return (str(self.dataset[index.row()][0]) + ":")
+            elif index.column() == 1:
+                return self.dataset[index.row()][1]
         return None
+
+
 
     def setData(self, index, value, role):
         if role == Qt.ItemDataRole.EditRole:
@@ -32,6 +49,7 @@ class MyModel(QAbstractTableModel):
             if not(0 <= value <= 3):
                 return False
             print(f"Register {index.row()}, changed to {value}")
+            self.dataset[index.row()][1] = value
             return True
         return False
 
