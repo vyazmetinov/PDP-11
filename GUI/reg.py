@@ -8,24 +8,35 @@ import numpy as np
 import ui_reg
 
 class MyModel(QAbstractTableModel):
-<<<<<<< HEAD
-=======
-    data_set = dict([
+    dataset = [
+        ["N", 0],
+        ["Z", 0],
+        ["V", 0],
+        ["C", 0],
+        ["R1", 0],
+        ["R2", 0],
+        ["R3", 0],
+        ["R4", 0],
+        ["R5", 0],
+        ["R6", 0],
+        ["R7", 0],
+        ["R8", 0],
+    ]
 
-    ])
->>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
 
     def rowCount(self, parent: QModelIndex):
-        return 3
+        return len(self.dataset)
     def columnCount(self, parent: QModelIndex):
         return 2
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+
         if role == Qt.ItemDataRole.DisplayRole:
-            return index.row() + index.column()
+            if index.column() == 0:
+                return (str(self.dataset[index.row()][0]) + ":")
+            elif index.column() == 1:
+                return self.dataset[index.row()][1]
         return None
-<<<<<<< HEAD
-=======
 
     def setData(self, index, value, role):
         if role == Qt.ItemDataRole.EditRole:
@@ -37,23 +48,19 @@ class MyModel(QAbstractTableModel):
             if not(0 <= value <= 3):
                 return False
             print(f"Register {index.row()}, changed to {value}")
+            self.dataset[index.row()][1] = value
             return True
         return False
 
->>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
     def headerData(self, col, orientation, role):
         if role == Qt.ItemDataRole.DisplayRole and orientation == Qt.Orientation.Horizontal:
             return ["Регистр", "Значение"][col]
 
-<<<<<<< HEAD
-=======
     def flags(self, index):
         default_flags = QAbstractTableModel.flags(self, index)
         if index.column() == 1:
             return PySide6.QtCore.Qt.ItemFlag.ItemIsEditable | QAbstractTableModel.flags(self, index)
         return default_flags
-
->>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
 class Registers(PySide6.QtWidgets.QDockWidget, ui_reg.Ui_Registers):
     def __init__(self, parent: None):
         super().__init__(parent)

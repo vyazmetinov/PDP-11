@@ -48,7 +48,7 @@ class ExampleApp(PySide6.QtWidgets.QMainWindow, ui_mainwindow.Ui_MainWindow):
             self.current_file_path = fileName
             self.code.setText(text)
         else:
-            fileName, _ = QFileDialog.getOpenFileName(self, 'Open code', './', 'PDP-11 assembly files (*.txt)')
+            fileName, _ = QFileDialog.getOpenFileName(self, 'Open code', './', 'PDP-11 (*.pdp);;Текстовые файлы (*.txt);;Все файлы (*)')
             print("fileName", fileName[0])
             fileName = Path(fileName)
             text = fileName.read_text()
@@ -56,7 +56,7 @@ class ExampleApp(PySide6.QtWidgets.QMainWindow, ui_mainwindow.Ui_MainWindow):
             self.code.setText(text)
 
     def createFile(self):
-        file_path, _ = QFileDialog.getSaveFileName(self, "Создать файл", "", "Текстовые файлы (*.txt);;Все файлы (*);;*.pdp")
+        file_path, _ = QFileDialog.getSaveFileName(self, "Создать файл", "", "PDP-11 (*.pdp);;Текстовые файлы (*.txt);;Все файлы (*)")
         if file_path:
             with open(file_path, 'w') as f:
                 f.write("Напишите что-нибудь:")
@@ -70,7 +70,7 @@ class ExampleApp(PySide6.QtWidgets.QMainWindow, ui_mainwindow.Ui_MainWindow):
 
         options = QtWidgets.QFileDialog.Options()
         file_path, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Сохранить файл", "",
-                                                             "Текстовые файлы (*.txt);;Все файлы (*)",
+                                                             "PDP (*.pdp);;Текстовые файлы (*.txt);;Все файлы (*)",
                                                              options=options)
 
         if file_path:
