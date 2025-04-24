@@ -26,10 +26,13 @@ class MyModel_1(QAbstractTableModel):
 
     def insertRows(self, position, rows=1, parent=QModelIndex()):
         self.beginInsertRows(parent, position, position + rows - 1)
-        # for _ in range(rows):
-        #     # Добавим пустую строку (или с начальными значениями по умолчанию)
-        #     self.memory.insert(position, self.memory[_])
+
         self.endInsertRows()
+        return True
+
+    def removeRows(self, position, rows=1, parent=QModelIndex()):
+        self.beginRemoveRows(parent, position, position + rows - 1)
+        self.endRemoveRows()
         return True
 
     def data(self, index, role):
@@ -55,9 +58,9 @@ class MyModel_1(QAbstractTableModel):
         if col == 1:
             try:
                 if value.lower().startswith("0o"):
-                    new_val = int(value, 16)
+                    new_val = int(value, 8)
                 else:
-                    new_val = int(value, 16)
+                    new_val = int(value)
                 self.memory[row] = (addr, new_val)
                 self.dataChanged.emit(index, index)
                 return True
@@ -91,21 +94,29 @@ class MemoryView(PySide6.QtWidgets.QDockWidget, ui_mem_view.Ui_MemoryView):
         self.setEndAddress()
 
 
+
+
     def setStartAddress(self):
         address = self.from_item.text()
         try:
+            print(self.model.memory)
             value = int(address, base=8)
             assert value < 0 or value > 0xFF
 
             if self.model.first_id <= value:
-                self.model.memory = self.model.memory[(value - self.model.first_id)::]
+                self.model.memory = self.model.memory[((value - self.model.first_id) // 2)::]
+                print(value, self.model.first_id)
+                print(self.model.memory)
+                for i in range(value, self.model.first_id, 2):
+                    self.model.removeRows(0)
             else:
                 new_indexes = [[value + i, 0] for i in range(0, self.model.first_id - value, 2)]
                 self.model.memory = new_indexes + self.model.memory
+                print(self.model.memory)
                 for i in range(self.model.first_id - value):
                     self.model.insertRows(0)
-                for row in range(len(self.model.memory)):
-                    self.table.setRowHeight(row, 24)
+                # for row in range(len(self.model.memory)):
+                #     self.table.setRowHeight(row, 24)
 
 
             self.model.first_id = value
@@ -128,7 +139,10 @@ class MemoryView(PySide6.QtWidgets.QDockWidget, ui_mem_view.Ui_MemoryView):
                     self.table.setRowHeight(row, 24)
 
             else:
-                self.model.memory = self.model.memory[(value - self.model.last_id)::]
+                self.model.memory = self.model.memory[0:-((self.model.last_id - value) // 2)]
+                print(self.model.memory)
+                for i in range(value, self.model.last_id, 2):
+                    self.model.removeRows(-1)
             self.model.last_id = value
 
         except:
