@@ -9,6 +9,32 @@ import numpy as np
 import ui_code
 
 
+<<<<<<< HEAD
+class MyModel_2(QAbstractTableModel):
+
+    def rowCount(self, parent: QModelIndex):
+        return 3
+    def columnCount(self, parent: QModelIndex):
+        return 2
+
+    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+        if role == Qt.ItemDataRole.DisplayRole:
+            return index.row() + index.column()
+        return None
+    def headerData(self, col, orientation, role):
+        if role == Qt.ItemDataRole.DisplayRole and orientation == Qt.Orientation.Horizontal:
+            return ["Адрес", "Значение"][col]
+
+class Code(PySide6.QtWidgets.QWidget, ui_code.Ui_Code):
+    def __init__(self, parent: None):
+        print("Memory view.init")
+        super().__init__(parent)
+        self.setupUi(self)
+        print("setupUI")
+        self.model = MyModel_2()
+
+        self.ui = ui_code.Ui_Code()
+=======
 
 class Code(PySide6.QtWidgets.QWidget, ui_code.Ui_Code):
     def __init__(self, parent=None):
@@ -28,3 +54,4 @@ class Code(PySide6.QtWidgets.QWidget, ui_code.Ui_Code):
 
     def text(self):
         return self.code.toPlainText()
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e

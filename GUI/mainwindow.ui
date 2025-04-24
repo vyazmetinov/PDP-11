@@ -136,18 +136,18 @@
      <string>Поиск</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="Visibility">
     <property name="title">
      <string>Вкладки</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
-    <addaction name="action_3"/>
+    <addaction name="isRegisters"/>
+    <addaction name="isCode"/>
+    <addaction name="isMemory"/>
    </widget>
    <addaction name="File"/>
    <addaction name="Debug_2"/>
    <addaction name="menu_3"/>
-   <addaction name="menu"/>
+   <addaction name="Visibility"/>
   </widget>
   <widget class="Header" name="header_2">
    <property name="styleSheet">
@@ -166,11 +166,17 @@ background-color: white;
    </attribute>
   </widget>
   <widget class="Registers" name="registers">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
    <attribute name="dockWidgetArea">
-    <number>8</number>
+    <number>2</number>
    </attribute>
   </widget>
   <widget class="MemoryView" name="memoryView">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
    <property name="allowedAreas">
     <set>Qt::AllDockWidgetAreas</set>
    </property>
@@ -242,7 +248,7 @@ background-color: white;
     <string>Ctrl+D</string>
    </property>
   </action>
-  <action name="action">
+  <action name="isAssembler">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -253,7 +259,7 @@ background-color: white;
     <string>Отладка</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="isRegisters">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -264,7 +270,7 @@ background-color: white;
     <string>Регистры</string>
    </property>
   </action>
-  <action name="action_3">
+  <action name="isCode">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -289,6 +295,17 @@ background-color: white;
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+R</string>
+   </property>
+  </action>
+  <action name="isMemory">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Память</string>
    </property>
   </action>
  </widget>
@@ -440,6 +457,54 @@ background-color: white;
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>isMemory</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>memoryView</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>30</x>
+     <y>368</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>30</x>
+     <y>368</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>isCode</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>tabWidget</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>515</x>
+     <y>368</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>isRegisters</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>registers</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>702</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>openFile()</slot>
@@ -449,5 +514,6 @@ background-color: white;
   <slot>runAssemblyOnce()</slot>
   <slot>stopAssembly()</slot>
   <slot>runAssembly()</slot>
+  <slot>VisibleMemoryChange()</slot>
  </slots>
 </ui>
