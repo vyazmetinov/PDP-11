@@ -50,7 +50,7 @@ class Ui_Header(object):
         sizePolicy.setHeightForWidth(self.runButton.sizePolicy().hasHeightForWidth())
         self.runButton.setSizePolicy(sizePolicy)
         icon = QIcon()
-        icon.addFile(u"icons/skip_next.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon.addFile(u"icons/play_arrow.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.runButton.setIcon(icon)
 
         self.horizontalLayout_2.addWidget(self.runButton, 0, Qt.AlignTop)
@@ -79,7 +79,7 @@ class Ui_Header(object):
         sizePolicy.setHeightForWidth(self.stepButton.sizePolicy().hasHeightForWidth())
         self.stepButton.setSizePolicy(sizePolicy)
         icon1 = QIcon()
-        icon1.addFile(u":icons/icons/play_arrow.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        icon1.addFile(u":icons/icons/skip_next.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.stepButton.setIcon(icon1)
 
         self.horizontalLayout.addWidget(self.stepButton, 0, Qt.AlignVCenter)

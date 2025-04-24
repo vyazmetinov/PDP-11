@@ -9,7 +9,7 @@ import numpy as np
 import ui_assembler
 
 
-class MyModel_3(QAbstractTableModel):
+class MyModel_3(QAbstractTableModel, ui_assembler.Ui_Assembler):
     dataset = [
         dict({"memory": "001000", "command": "mov     #000200,r1", "comment": "[001002]=000200"}),
         dict({"memory": "001004", "command": "movb    (r1)+,r0   ", "comment": "[000200]=110"}),
@@ -73,11 +73,4 @@ class Assembler(PySide6.QtWidgets.QWidget, ui_assembler.Ui_Assembler):
         self.model = MyModel_3()
         self.tableView.setModel(self.model)
         self.ui = ui_assembler.Ui_Assembler()
-
-if __name__ == '__main__':
-    import sys
-    from PySide6.QtWidgets import QApplication
-    app = QApplication(sys.argv)
-    window = Assembler()
-    window.show()
-    sys.exit(app.exec())
+        self.tableView.resizeColumnsToContents()

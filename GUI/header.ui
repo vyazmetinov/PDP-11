@@ -64,7 +64,7 @@ border-radius: 10px;
             </property>
             <property name="icon">
              <iconset>
-              <normaloff>icons/skip_next.svg</normaloff>icons/skip_next.svg</iconset>
+              <normaloff>icons/play_arrow.svg</normaloff>icons/play_arrow.svg</iconset>
             </property>
            </widget>
           </item>
@@ -122,7 +122,7 @@ border-radius: 10px;
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>:icons/icons/play_arrow.svg</normaloff>:icons/icons/play_arrow.svg</iconset>
+           <normaloff>:icons/icons/skip_next.svg</normaloff>:icons/icons/skip_next.svg</iconset>
          </property>
         </widget>
        </item>
