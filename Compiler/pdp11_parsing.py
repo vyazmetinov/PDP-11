@@ -212,9 +212,8 @@ class PDP11Parser:
             # Разбираем строку
             parsed = self.parse(line)
             if "error" in parsed:
-                continue  # или можно выкидывать исключение
+                continue  
 
-            # Формируем запись
             entry = {
                 'adr': f"{current_address:06o}",  # Адрес в 6-значном восьмеричном формате
                 'label': parsed.get('label', [''])[0] if 'label' in parsed else '',
@@ -230,7 +229,6 @@ class PDP11Parser:
 
             # Если команда имеет аргументы, увеличиваем адрес дополнительно
             if 'args' in parsed and parsed['args']:
-                # Простейшая эвристика: каждый аргумент добавляет 2 байта
                 current_address += len(parsed['args']) * 2
 
         return compiled
