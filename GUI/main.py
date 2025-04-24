@@ -7,11 +7,15 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QWidget, QFileDialog
 import subprocess
 
+<<<<<<< HEAD
+import ui_mainwindow
+=======
 if __name__ == "__main__":
     for f in ["reg", "mainwindow", "mem_view", "code", "assembler", "header"]:
         subprocess.run(["pyside6-uic", f"{f}.ui", "-o", f"ui_{f}.py"], check=True)
 import ui_mainwindow
 from pathlib import Path
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
 
 
 
@@ -22,8 +26,11 @@ class Mainwindow(PySide6.QtWidgets.QMainWindow, ui_mainwindow.Ui_MainWindow):
         # Это здесь нужно для доступа к переменным, методам
         # и т.д. в файле design.py
         super().__init__()
+<<<<<<< HEAD
+=======
         self.current_file_path = None
         self.running = False
+>>>>>>> beb2c9fb29a537f83deca539133c5fc84028614e
         self.ui = ui_mainwindow.Ui_MainWindow()
         self.setupUi(self)  # Это нужно для инициализации нашего дизайна
         self.header_2.stepButton.clicked.connect(self.runAssemblyOnce)

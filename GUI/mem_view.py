@@ -43,11 +43,9 @@ class MyModel_1(QAbstractTableModel):
             return oct(self.memory[index.row()][1])
         # print("ALARM")
         return None
-
     def headerData(self, col, orientation, role):
         if role == Qt.ItemDataRole.DisplayRole and orientation == Qt.Orientation.Horizontal:
             return ["Адрес", "Значение"][col]
-
 
 
     def setData(self, index, value, role=Qt.EditRole):
