@@ -22,13 +22,13 @@ class Ui_Code(object):
     def setupUi(self, Code):
         if not Code.objectName():
             Code.setObjectName(u"Code")
-        Code.resize(640, 480)
+        Code.resize(640, 377)
         self.gridLayout = QGridLayout(Code)
         self.gridLayout.setObjectName(u"gridLayout")
         self.code = QTextEdit(Code)
         self.code.setObjectName(u"code")
         self.code.setAutoFormatting(QTextEdit.AutoNone)
-        self.code.setOverwriteMode(True)
+        self.code.setOverwriteMode(False)
 
         self.gridLayout.addWidget(self.code, 0, 0, 1, 1)
 
