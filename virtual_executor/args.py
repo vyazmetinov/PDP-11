@@ -1,3 +1,7 @@
+import sys
+sys.path.append('C:/proekt/PDP-11')
+
+
 """
 Реализация обработки аргументов команд и режимов адресации для эмулятора.
 
@@ -16,7 +20,7 @@
 7: Косвенная индексная @X(R)
 """
 
-from mem import reg, w_write, b_write, w_read
+from virtual_executor.mem import reg, w_write, b_write, w_read
 
 class ModeNotIplementedError(Exception):
     """Исключение при попытке использовать неподдерживаемый режим адресации."""

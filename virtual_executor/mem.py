@@ -1,3 +1,7 @@
+import sys
+sys.path.append('C:/proekt/PDP-11')
+
+
 """
 Модуль эмуляции памяти и регистров PDP-11.
 

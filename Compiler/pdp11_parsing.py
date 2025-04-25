@@ -1,6 +1,9 @@
 import pyparsing as pp
 from typing import Dict, Optional, Union
 import re
+import sys
+sys.path.append('/Users/ivan/Documents/GitHub/PDP-11')
+
 
 class Data:
     """
@@ -201,6 +204,7 @@ class PDP11Parser:
         - 'cmd': полная команда с аргументами
         - 'comment': комментарий (если есть)
         - 'parsed': разобранные данные команды
+        - 'binary': бинарное представление команды
         """
         compiled = []
         current_address = 0o1000  # Начальный адрес (восьмеричный)
@@ -219,28 +223,102 @@ class PDP11Parser:
             if "error" in parsed:
                 continue
 
+            # Генерируем бинарное представление команды
+            binary = self.generate_binary(parsed)
+
+
             entry = {
                 'adr': f"{current_address:06o}",  # Адрес в 6-значном восьмеричном формате
                 'label': parsed.get('label', [''])[0] if 'label' in parsed else '',
                 'cmd': line.split(';')[0].strip(),  # Вся команда до комментария
                 'comment': parsed.get('comment', ''),
+                'binary': binary
             }
 
             compiled.append(entry)
 
             # Определяем длину команды в байтах
-            cmd_length = 2  # Базовый размер команды (2 байта)
-
-            # Учитываем аргументы команд
-            if 'args' in parsed:
-                # Для команд с непосредственными значениями (#num) добавляем 2 байта
-                for arg in parsed['args']:
-                    if isinstance(arg, str) and arg.startswith('#'):
-                        cmd_length += 2
-
+            cmd_length = len(binary)  # Размер команды в байтах
             current_address += cmd_length
 
         return compiled
+
+    def generate_binary(self, parsed: dict) -> list[str]:
+        """
+        Генерирует бинарное представление команды в виде списка байт (в шестнадцатеричном формате)
+        """
+        cmd = parsed['command'].lower()
+        args = parsed.get('args', [])
+        binary = []
+
+        if cmd == 'mov':
+            # MOV src, dst: 01SSDD
+            src = self.parse_arg(args[0])
+            dst = self.parse_arg(args[1])
+
+            # Формируем код команды
+            opcode = 0o01  # MOV
+            src_mode = src['mode']
+            src_reg = src['regnum'] if src['regnum'] is not None else 0
+            dst_mode = dst['mode']
+            dst_reg = dst['regnum'] if dst['regnum'] is not None else 0
+
+            # Первое слово команды
+            cmd_word = (opcode << 12) | (src_mode << 6) | (dst_mode << 3) | dst_reg
+            binary.append(f"{(cmd_word >> 8) & 0xff:02x}")
+            binary.append(f"{cmd_word & 0xff:02x}")
+
+            # Второе слово (если есть непосредственное значение)
+            if src['additional_value'] is not None:
+                val = src['additional_value']
+                binary.append(f"{val & 0xff:02x}")
+                binary.append(f"{(val >> 8) & 0xff:02x}")
+            elif dst['additional_value'] is not None:
+                val = dst['additional_value']
+                binary.append(f"{val & 0xff:02x}")
+                binary.append(f"{(val >> 8) & 0xff:02x}")
+
+        elif cmd == 'add':
+            # ADD src, dst: 06SSDD
+            src = self.parse_arg(args[0])
+            dst = self.parse_arg(args[1])
+
+            opcode = 0o06  # ADD
+            src_mode = src['mode']
+            src_reg = src['regnum'] if src['regnum'] is not None else 0
+            dst_mode = dst['mode']
+            dst_reg = dst['regnum'] if dst['regnum'] is not None else 0
+
+            cmd_word = (opcode << 12) | (src_mode << 6) | (dst_mode << 3) | dst_reg
+            binary.append(f"{(cmd_word >> 8) & 0xff:02x}")
+            binary.append(f"{cmd_word & 0xff:02x}")
+
+            if src['additional_value'] is not None:
+                val = src['additional_value']
+                binary.append(f"{val & 0xff:02x}")
+                binary.append(f"{(val >> 8) & 0xff:02x}")
+
+        elif cmd == 'halt':
+            # HALT: 000000
+            binary.append("00")
+            binary.append("00")
+
+        return binary
+
+    def generate_hex_file(self, compiled: list[dict], filename: str):
+        """
+        Генерирует hex-файл из скомпилированных данных
+        """
+        with open(filename, 'w') as f:
+            # Заголовок (адрес и длина)
+            total_bytes = sum(len(item['binary']) for item in compiled)
+            f.write(f"0200 {total_bytes:04x}\n")
+
+            # Данные
+            for item in compiled:
+                for byte in item['binary']:
+                    f.write(f"{byte}\n")
+
 
 source = [
     ". = 1000",
@@ -252,3 +330,5 @@ source = [
 
 parser = PDP11Parser()
 compiled = parser.compile(source)
+print(compiled)
+parser.generate_hex_file(compiled, "output.hex")
