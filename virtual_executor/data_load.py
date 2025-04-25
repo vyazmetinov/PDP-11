@@ -1,3 +1,7 @@
+import sys
+sys.path.append('C:/proekt/PDP-11')
+
+
 """
 Модуль загрузки данных и диагностики памяти.
 
@@ -6,7 +10,7 @@
 - Визуализация содержимого памяти в формате дампа
 """
 
-from mem import b_write, w_read
+from virtual_executor.mem import b_write, w_read
 
 
 def load_data(filename):

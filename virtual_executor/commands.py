@@ -1,3 +1,7 @@
+import sys
+sys.path.append('C:/proekt/PDP-11')
+
+
 """
 Реализация команд эмулятора процессора.
 
@@ -12,8 +16,8 @@
 Параметры команд (ss, dd и др.) определяют режимы адресации.
 """
 
-from mem import w_read, w_write, reg, b_write,NZVC
-from args import ArgsProcessor
+from virtual_executor.mem import w_read, w_write, reg, b_write,NZVC
+from virtual_executor.args import ArgsProcessor
 import sys
 
 def setNZ(value):
