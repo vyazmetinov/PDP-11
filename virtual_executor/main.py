@@ -4,9 +4,9 @@
 Содержит точку входа и цикл выполнения инструкций.
 """
 
-from mem import w_read, reg, NZVC, mem
-from commands import commands, ArgsProcessor
-from data_load import load_data
+from virtual_executor.mem import *
+from virtual_executor.commands import commands, ArgsProcessor
+from virtual_executor.data_load import load_data
 
 
 def main():

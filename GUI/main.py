@@ -1,12 +1,15 @@
 # This Python file uses the following encoding: utf-8
 import sys
-
+sys.path.append('/Users/ivan/Documents/GitHub/PDP-11')
 import PySide6
 from PySide6 import QtWidgets, QtCore
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QWidget, QFileDialog
 from Compiler.pdp11_parsing import PDP11Parser
+from virtual_executor.main import execute_and_track
 import subprocess
+
+
 
 if __name__ == "__main__":
     for f in ["reg", "mainwindow", "mem_view", "code", "assembler", "header"]:
@@ -33,7 +36,7 @@ class Mainwindow(PySide6.QtWidgets.QMainWindow, ui_mainwindow.Ui_MainWindow):
         self.header_2.runButton.setCheckable(True)
         self.header_2.runButton.toggled.connect(self.runAssembly)
         self.current_line = 0
-
+        self.parser = PDP11Parser()
 
     def openFile(self, file_path: str):
         fileName = ""
@@ -96,6 +99,10 @@ class Mainwindow(PySide6.QtWidgets.QMainWindow, ui_mainwindow.Ui_MainWindow):
         if self.current_line < len(text):
             print(text[self.current_line])
             self.current_line += 1
+            changes = execute_and_track(text[self.current_line])
+            self.registers.updateRegisters(changes['reg'], changes['nzvc'])
+
+
         else:
             print("COMPLETE")
             self.stopAssembly()
@@ -115,8 +122,9 @@ class Mainwindow(PySide6.QtWidgets.QMainWindow, ui_mainwindow.Ui_MainWindow):
         self.header_2.timer.stop()
         self.header_2.runButton.setIcon(QIcon(":icons/icons/play_arrow.svg"))
     def build(self):
-        code = self.code.toPlainText().split("\n")
-        self.tabWidget.code.model.dataset = PDP11Parser.compile(code)
+        code_text = self.code.text().split("\n")
+        print("BUILD")
+        self.assembler.model.dataset = self.parser.compile(code_text)
 
 
 

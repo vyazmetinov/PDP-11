@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import sys
-
+sys.path.append('/Users/ivan/Documents/GitHub/PDP-11')
+from virtual_executor.mem import *
 import PySide6
 from PySide6.QtCore import QAbstractItemModel, QAbstractTableModel, QModelIndex, Qt
 from PySide6.QtWidgets import QApplication, QWidget, QTableView
@@ -9,19 +10,19 @@ import ui_reg
 
 class MyModel(QAbstractTableModel):
     dataset = [
-        ["N", 0],
-        ["Z", 0],
-        ["V", 0],
-        ["C", 0],
-        [" ", None],
-        ["R0", 0],
-        ["R1", 0],
-        ["R2", 0],
-        ["R3", 0],
-        ["R4", 0],
-        ["R5", 0],
-        ["R6", 0],
-        ["R7", 0],
+        ["N", 0, 0],
+        ["Z", 0, 0],
+        ["V", 0, 0],
+        ["C", 0, 0],
+        [" ", None, 0],
+        ["R0", 0, 0],
+        ["R1", 0, 0],
+        ["R2", 0, 0],
+        ["R3", 0, 0],
+        ["R4", 0, 0],
+        ["R5", 0, 0],
+        ["R6", 0, 0],
+        ["R7", 0, 0],
     ]
 
 
@@ -37,6 +38,8 @@ class MyModel(QAbstractTableModel):
                 return (str(self.dataset[index.row()][0]))
             elif index.column() == 1:
                 return self.dataset[index.row()][1]
+
+
         return None
 
     def setData(self, index, value, role):
@@ -69,3 +72,13 @@ class Registers(PySide6.QtWidgets.QDockWidget, ui_reg.Ui_Registers):
         self.model = MyModel()
         self.table.setModel(self.model)
         self.ui = ui_reg.Ui_Registers()
+        def updateRegisters(reg_changes, nzvc_changes):
+            for i in range(len(self.model.dataset)):
+                if i < 5:
+                    self.model.dataset[i] = [self.model.dataset[i][0], NZVC[i], i in nzvc_changes]
+                else:
+                    self.model.dataset[i] = [self.model.dataset[i][0], reg[i - 4], i - 4 in reg_changes]
+
+
+
+
