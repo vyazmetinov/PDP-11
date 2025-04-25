@@ -1,27 +1,62 @@
 """
-Главный модуль эмулятора
+Основной модуль эмулятора PDP-11.
+
+Содержит точку входа и цикл выполнения инструкций.
 """
 
-from mem import reg
-from data_load import load_data, disassemble
-from command import execute_instruction
+from mem import w_read, reg, NZVC, mem
+from commands import commands, ArgsProcessor
+from data_load import load_data
+
 
 def main():
-    print("000000:   . = 1000")
-    reg[7] = 0o1000  # Инициализация PC
-    
-    print("\nЗагрузка программы...")
-    loaded_addrs = load_data("01_sum.pdp.o")
-    
-    if loaded_addrs:
-        start = min(loaded_addrs)
-        end = max(loaded_addrs) + 2
-        print("\nДизассемблирование программы:")
-        disassemble(start, end)
-    
-    print("\nВыполнение программы:")
-    while execute_instruction():
-        pass
+    load_data("pdp_11.o")
+    reg[7] = 0o1000
+    print("---------------- running --------------")
+    args = ArgsProcessor()
+
+    while True:
+        changes = execute_and_track(args)
+        print("Изменения:", changes)
+
+def execute_and_track(args):
+    """Выполняет команду и возвращает изменения в mem, reg, NZVC."""
+    # Сохраняем исходные состояния
+    old_mem = mem.copy()
+    old_reg = reg.copy()
+    old_NZVC = NZVC.copy()
+
+    # Выполняем команду
+    do_command(args)
+
+    # Находим изменения
+    mem_changes = [i for i in range(len(mem)) if mem[i] != old_mem[i]]
+    reg_changes = [i for i in range(len(reg)) if reg[i] != old_reg[i]]
+    nzvc_changes = [i for i in range(4) if NZVC[i] != old_NZVC[i]]
+
+    return {
+        "mem": mem_changes,
+        "reg": reg_changes,
+        "nzvc": nzvc_changes
+    }
+
+
+def do_command(args):
+    """Обрабатывает одну команду."""
+    # Чтение инструкции и увеличение PC
+    word = w_read(reg[7])
+    print(f"{reg[7]:06o}:", end=" ")
+    reg[7] += 2
+
+    # Поиск и выполнение команды
+    for cmd in commands:
+        if (word & cmd["mask"]) == cmd["opcode"]:
+            print(cmd["name"], end=" ")
+            args.process(cmd["params"], word)
+            cmd["handler"](args)
+            print()
+            break
+
 
 if __name__ == "__main__":
     main()
