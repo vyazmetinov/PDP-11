@@ -94,7 +94,7 @@
         <string>Код</string>
        </attribute>
       </widget>
-      <widget class="Assembler" name="widget">
+      <widget class="Assembler" name="assembler">
        <attribute name="title">
         <string>Ассемблер</string>
        </attribute>
@@ -109,7 +109,7 @@
      <x>0</x>
      <y>0</y>
      <width>968</width>
-     <height>36</height>
+     <height>42</height>
     </rect>
    </property>
    <widget class="QMenu" name="File">

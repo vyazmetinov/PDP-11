@@ -95,16 +95,16 @@ class Ui_MainWindow(object):
         self.code = Code()
         self.code.setObjectName(u"code")
         self.tabWidget.addTab(self.code, "")
-        self.widget = Assembler()
-        self.widget.setObjectName(u"widget")
-        self.tabWidget.addTab(self.widget, "")
+        self.assembler = Assembler()
+        self.assembler.setObjectName(u"assembler")
+        self.tabWidget.addTab(self.assembler, "")
 
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 968, 24))
+        self.menubar.setGeometry(QRect(0, 0, 968, 42))
         self.File = QMenu(self.menubar)
         self.File.setObjectName(u"File")
         self.Debug_2 = QMenu(self.menubar)
@@ -160,8 +160,9 @@ class Ui_MainWindow(object):
         self.isMemory.toggled.connect(self.memoryView.setVisible)
         self.isCode.toggled.connect(self.tabWidget.setVisible)
         self.isRegisters.toggled.connect(self.registers.setVisible)
+        self.actionBuild.triggered.connect(MainWindow.build)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -214,7 +215,7 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(shortcut)
         self.isMemory.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u043c\u044f\u0442\u044c", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.code), QCoreApplication.translate("MainWindow", u"\u041a\u043e\u0434", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget), QCoreApplication.translate("MainWindow", u"\u0410\u0441\u0441\u0435\u043c\u0431\u043b\u0435\u0440", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.assembler), QCoreApplication.translate("MainWindow", u"\u0410\u0441\u0441\u0435\u043c\u0431\u043b\u0435\u0440", None))
         self.File.setTitle(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b", None))
         self.Debug_2.setTitle(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043b\u0430\u0434\u043a\u0430", None))
         self.menu_3.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a", None))
