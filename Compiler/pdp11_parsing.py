@@ -246,58 +246,85 @@ class PDP11Parser:
 
     def generate_binary(self, parsed: dict) -> list[str]:
         """
-        Генерирует бинарное представление команды в точном соответствии с примером
+        Генерирует бинарное представление команды в виде списка 16-битных слов
+        (каждое слово в шестизначном восьмеричном формате)
         """
         cmd = parsed['command'].lower()
         args = parsed.get('args', [])
-        binary = []
+        words = []  # Список 16-битных слов в восьмеричном формате
 
         if cmd == 'mov':
-            # MOV src, dst: 01SSDD
             src = self.parse_arg(args[0])
             dst = self.parse_arg(args[1])
-
-            # Формируем код команды
             opcode = 0o01  # MOV
 
-            # Обработка режима адресации источника
-            if src['mode'] == 27:  # Непосредственная адресация #
-                src_code = 0o27  # Режим 27 (непосредственная адресация)
-            else:
-                src_code = (src['mode'] << 3) | src['regnum']
-
+            # Обработка режима адресации
+            src_code = 0o27 if src['mode'] == 27 else (src['mode'] << 3) | src['regnum']
             dst_code = (dst['mode'] << 3) | dst['regnum']
 
-            # Первое слово команды (little-endian)
+            # Формируем 16-битное слово команды
             cmd_word = (opcode << 12) | (src_code << 6) | dst_code
-            binary.append(f"{cmd_word & 0xff:02x}")  # Младший байт
-            binary.append(f"{(cmd_word >> 8) & 0xff:02x}")  # Старший байт
+            words.append(f"{cmd_word:06o}")  # Преобразуем в 6-значное восьмеричное число
 
             # Если есть непосредственное значение
             if src['additional_value'] is not None:
                 val = src['additional_value']
-                binary.append(f"{val & 0xff:02x}")  # Младший байт значения
-                binary.append(f"{(val >> 8) & 0xff:02x}")  # Старший байт значения
+                words.append(f"{val:06o}")  # Добавляем значение как отдельное слово
 
         elif cmd == 'add':
-            # ADD src, dst: 06SSDD
             src = self.parse_arg(args[0])
             dst = self.parse_arg(args[1])
-
             opcode = 0o06  # ADD
             src_code = (src['mode'] << 3) | src['regnum']
             dst_code = (dst['mode'] << 3) | dst['regnum']
 
             cmd_word = (opcode << 12) | (src_code << 6) | dst_code
-            binary.append(f"{cmd_word & 0xff:02x}")  # Младший байт
-            binary.append(f"{(cmd_word >> 8) & 0xff:02x}")  # Старший байт
+            words.append(f"{cmd_word:06o}")
 
         elif cmd == 'halt':
-            # HALT: 000000
-            binary.append("00")
-            binary.append("00")
+            words.append("000000")  # HALT
 
-        return binary
+        return words
+
+    def compile(self, source_lines: list[str]) -> list[dict]:
+        """
+        Компилирует список строк ассемблерного кода
+        """
+        compiled = []
+        current_address = 0o1000  # Начальный адрес (восьмеричный)
+
+        for line in source_lines:
+            if not line:  # Пропускаем пустые строки
+                continue
+
+            # Обрабатываем директиву . =
+            if line.startswith(". = "):
+                start_address = line.strip().split()[-1]
+                current_address = int(start_address, 8)
+                continue
+
+            # Разбираем строку
+            parsed = self.parse(line)
+            if "error" in parsed:
+                continue
+
+            # Генерируем бинарное представление команды
+            binary_words = self.generate_binary(parsed)
+
+            entry = {
+                'adr': f"{current_address:06o}",
+                'label': parsed.get('label', [''])[0] if 'label' in parsed else '',
+                'cmd': line.split(';')[0].strip(),
+                'comment': parsed.get('comment', ''),
+                'binary': binary_words
+            }
+
+            compiled.append(entry)
+
+            # Увеличиваем адрес на количество слов * 2 (каждое слово = 2 байта)
+            current_address += len(binary_words) * 2
+
+        return compiled
 
     def generate_hex_file(self, compiled: list[dict], filename: str):
         """
@@ -321,7 +348,3 @@ source = [
     "add R0, R1",
     "halt"
 ]
-
-parser = PDP11Parser()
-compiled = parser.compile(source)
-parser.generate_hex_file(compiled, "output.hex")
