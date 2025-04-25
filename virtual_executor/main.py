@@ -49,7 +49,6 @@ def do_command():
     """Обрабатывает одну команду."""
     # Чтение инструкции и увеличение PC
     word = w_read(reg[7])
-    
     print(f"{reg[7]:06o}:", end=" ")
     reg[7] += 2
     args = ArgsProcessor()

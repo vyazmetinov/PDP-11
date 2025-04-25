@@ -65,13 +65,11 @@ def do_halt(args):
     """Обработчик HALT: завершение работы с дампом регистров."""
     print("\n---------------- halted ---------------")
     reg_dump(reg)
-    sys.exit(0)
 
 def do_unknown(args):
     """Обработчик неизвестной команды."""
     print("\nUNKNOWN COMMAND")
     reg_dump(reg)
-    sys.exit(1)
 
 
 commands = [

@@ -7,6 +7,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QWidget, QFileDialog
 from Compiler.pdp11_parsing import PDP11Parser
 from virtual_executor.main import execute_and_track
+from virtual_executor.data_load import load_data
 import subprocess
 
 
@@ -99,8 +100,10 @@ class Mainwindow(PySide6.QtWidgets.QMainWindow, ui_mainwindow.Ui_MainWindow):
         if self.current_line < len(text):
             print(text[self.current_line])
             self.current_line += 1
-            changes = execute_and_track(text[self.current_line])
+            changes = execute_and_track()
             self.registers.updateRegisters(changes['reg'], changes['nzvc'])
+            self.memoryView.update_memory([512])
+            # print(512)
 
 
         else:
@@ -123,8 +126,11 @@ class Mainwindow(PySide6.QtWidgets.QMainWindow, ui_mainwindow.Ui_MainWindow):
         self.header_2.runButton.setIcon(QIcon(":icons/icons/play_arrow.svg"))
     def build(self):
         code_text = self.code.text().split("\n")
-        print("BUILD")
-        self.assembler.model.dataset = self.parser.compile(code_text)
+        assm = self.parser.compile(code_text)
+        self.assembler.update_dataset(assm)
+        load_data('/Users/ivan/Documents/GitHub/PDP-11/virtual_executor/pdp_11.o')
+
+
 
 
 
