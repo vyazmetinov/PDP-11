@@ -12,31 +12,48 @@
 Параметры команд (ss, dd и др.) определяют режимы адресации.
 """
 
-from mem import w_read, w_write, reg, b_write, NZVC
+from mem import w_read, w_write, reg, b_write,NZVC
 from args import ArgsProcessor
 import sys
 
+def setNZ(value):
+    """Устанавливает флаги Negative (N) и Zero (Z) на основе 16-битного значения."""
+    global NZVC
+    NZVC[0] = (value >> 15) & 1  # N: старший бит (знак)
+    NZVC[1] = 1 if (value & 0xFFFF) == 0 else 0  # Z: ноль
+
+def setC(result):
+    """Устанавливает флаги Carry (C) и Overflow (V) на основе 32-битного результата."""
+    global NZVC
+    NZVC[3] = (result >> 16) & 1  # C: перенос за пределы 16 бит
+    # Overflow (V): переполнение знака при сложении
+    NZVC[2] = 1 if ((result ^ (result >> 1)) & 0x8000) else 0
 
 def do_mov(args):
-    """Обработчик MOV: копирование из источника в приемник."""
+    """Обработчик MOV: копирование из источника в приемник с обновлением флагов."""
     if args.dd and args.ss:
-        args.dd.write(args.ss.value)
+        value = args.ss.value
+        args.dd.write(value)
+        setNZ(value)  # Установка N и Z на основе значения
     else:
         raise ValueError("Ошибка аргументов MOV")
 
 def do_add(args):
-    """Обработчик ADD: сложение с сохранением результата и обновлением флагов."""
-    global NZVC  # Добавляем доступ к флагам
+    """Обработчик ADD: сложение с обновлением флагов."""
+    global NZVC
 
     if args.dd and args.ss:
-        result = args.ss.value + args.dd.value
+        src = args.ss.value
+        dst = args.dd.value
+        result = src + dst  # 32-битный результат (учитывает переполнение)
+
+        # Запись результата в приемник (16 бит)
         args.dd.write(result & 0xFFFF)
 
-        # Обновление флагов
-        NZVC[0] = (result >> 15) & 1  # Negative (старший бит)
-        NZVC[1] = 1 if (result & 0xFFFF) == 0 else 0  # Zero
-        NZVC[2] = 1 if result > 0xFFFF else 0  # Overflow
-        NZVC[3] = (result >> 16) & 1  # Carry
+        # Установка флагов
+        setNZ(result & 0xFFFF)  # N и Z на основе 16-битного результата
+        setC(result)            # C и V на основе 32-битного результата
+
     else:
         raise ValueError("Ошибка аргументов ADD")
 
