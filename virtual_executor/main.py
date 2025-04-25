@@ -7,6 +7,7 @@ sys.path.append('C:/proekt/PDP-11')
 Содержит точку входа и цикл выполнения инструкций.
 """
 
+
 from virtual_executor.mem import w_read, reg, NZVC, mem
 from virtual_executor.commands import commands, ArgsProcessor
 from virtual_executor.data_load import load_data

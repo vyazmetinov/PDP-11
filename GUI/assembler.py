@@ -74,3 +74,4 @@ class Assembler(PySide6.QtWidgets.QWidget, ui_assembler.Ui_Assembler):
         self.tableView.setModel(self.model)
         self.ui = ui_assembler.Ui_Assembler()
         self.tableView.resizeColumnsToContents()
+
