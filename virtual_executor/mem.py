@@ -20,7 +20,7 @@ MEMSIZE = 64 * 1024  # Объем памяти в байтах
 mem = [0] * MEMSIZE  # Основной массив памяти
 reg = [0] * 8        # Регистры общего назначения R0-R7
 NZVC = [0, 0, 0, 0]  # Negative, Zero, Overflow, Carry
-
+reg[7] = 0o1000
 
 def b_write(adr, value):
     """

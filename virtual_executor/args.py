@@ -45,6 +45,12 @@ class ModeRegistrArg:
             else:
                 b_write(self.address, value)
 
+# def write_dst(dst_mode, dst_reg, ea, value):
+#     if dst_mode == 0:             # Register-direct
+#         reg[dst_reg] = value      # — вот здесь
+#     else:                         # Любой другой режим
+#         w_write(ea, value)
+
 
 class ArgsProcessor:
     """Обработчик аргументов команд, включая режимы адресации."""

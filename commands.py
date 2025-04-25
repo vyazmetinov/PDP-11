@@ -11,10 +11,10 @@
 Каждая команда содержит маску, код операции, мнемонику и функцию-обработчик.
 Параметры команд (ss, dd и др.) определяют режимы адресации.
 """
-
-from mem import w_read, w_write, reg, b_write,NZVC
-from args import ArgsProcessor
 import sys
+sys.path.append('C:/proekt/PDP-11')
+from virtual_executor.mem import w_read, w_write, reg, b_write,NZVC
+from virtual_executor.args import ArgsProcessor
 
 def setNZ(value):
     """Устанавливает флаги Negative (N) и Zero (Z) на основе 16-битного значения."""

@@ -330,5 +330,4 @@ source = [
 
 parser = PDP11Parser()
 compiled = parser.compile(source)
-print(compiled)
 parser.generate_hex_file(compiled, "output.hex")

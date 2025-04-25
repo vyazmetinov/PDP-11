@@ -14,6 +14,7 @@ from virtual_executor.mem import b_write, w_read
 
 
 def load_data(filename):
+    print("LOAD...")
     """
     Загружает данные в память из файла специального формата.
 
@@ -41,6 +42,7 @@ def load_data(filename):
             for offset in range(count):
                 byte = int(file.readline().strip(), 16)
                 b_write(address + offset, byte)
+    print("SUCCESS")
 
 
 def mem_dump(address, size):

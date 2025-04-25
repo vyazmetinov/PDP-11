@@ -14,7 +14,6 @@ class MyModel(QAbstractTableModel):
         ["Z", 0, 0],
         ["V", 0, 0],
         ["C", 0, 0],
-        [" ", None, 0],
         ["R0", 0, 0],
         ["R1", 0, 0],
         ["R2", 0, 0],
@@ -49,8 +48,8 @@ class MyModel(QAbstractTableModel):
             except ValueError:
                 return False
 
-            if not(0 <= value <= 3):
-                return False
+            # if not(0 <= value <= 3):
+            #     return False
             print(f"Register {index.row()}, changed to {value}")
             self.dataset[index.row()][1] = value
             return True
@@ -72,12 +71,17 @@ class Registers(PySide6.QtWidgets.QDockWidget, ui_reg.Ui_Registers):
         self.model = MyModel()
         self.table.setModel(self.model)
         self.ui = ui_reg.Ui_Registers()
-        def updateRegisters(reg_changes, nzvc_changes):
-            for i in range(len(self.model.dataset)):
-                if i < 5:
-                    self.model.dataset[i] = [self.model.dataset[i][0], NZVC[i], i in nzvc_changes]
-                else:
-                    self.model.dataset[i] = [self.model.dataset[i][0], reg[i - 4], i - 4 in reg_changes]
+    def updateRegisters(self, reg_changes, nzvc_changes):
+        for i in range(len(self.model.dataset)):
+            if i < 4:
+                self.model.beginResetModel()
+                self.model.dataset[i] = [self.model.dataset[i][0], NZVC[i], i in nzvc_changes]
+                self.model.endResetModel()
+
+            else:
+                self.model.beginResetModel()
+                self.model.dataset[i] = [self.model.dataset[i][0], reg[i - 4], i - 4 in reg_changes]
+                self.model.endResetModel()
 
 
 
