@@ -210,12 +210,13 @@ class PDP11Parser:
         current_address = 0o1000  # Начальный адрес (восьмеричный)
 
         for line in source_lines:
-            line = line.strip()
             if not line:  # Пропускаем пустые строки
                 continue
 
             # Игнорируем директиву . = 1000
             if line.startswith(". = "):
+                start_address = line.strip().split()[-1]
+                current_address = int(start_address, 8)
                 continue
 
             # Разбираем строку
@@ -323,5 +324,4 @@ source = [
 
 parser = PDP11Parser()
 compiled = parser.compile(source)
-print(compiled)
 parser.generate_hex_file(compiled, "output.hex")
