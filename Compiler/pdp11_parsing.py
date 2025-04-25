@@ -1,12 +1,13 @@
 import pyparsing as pp
-
+from typing import Dict, Optional, Union
+import re
 
 class Data:
     """
     Здесь мы определяем допустимые команды и регистры.
     """
     commands = {"mov", "add", "sub", "halt", "inc"}  # Набор допустимых команд
-    registers = {f"R{x}" for x in range(8)} | {"SP", "PC"} # Набор допустимых имен регистров (R0 - R7)
+    registers = {f"R{x}" for x in range(8)} | {"SP", "PC"}  # Набор допустимых имен регистров (R0 - R7)
     register_aliases = {"SP": "R6", "PC": "R7"}
 
     @classmethod
@@ -21,48 +22,51 @@ class PDP11Parser:
 
     def init_grammar(self):
         # Базовые элементы
-        identifier = pp.Word(pp.alphas + "_", pp.alphanums + "_") # Идентификатор (метка, переменная)
+        identifier = pp.Word(pp.alphas + "_", pp.alphanums + "_")  # Идентификатор (метка, переменная)
         number = pp.Combine(
-            pp.Optional(pp.oneOf("+ -")) + pp.Word(pp.nums) # Обрабатывает числа со знаком
-        ).addParseAction(lambda t: int(t[0])) # Преобразует разобранное число в целое число
+            pp.Optional(pp.oneOf("+ -")) + pp.Word(pp.nums)  # Обрабатывает числа со знаком
+        ).addParseAction(lambda t: int(t[0]))  # Преобразует разобранное число в целое число
 
         reg = (
-            pp.Combine(pp.CaselessLiteral("R") + pp.Word(pp.nums)) | # Соответствует именам регистров (например, R0, R1)
-            pp.CaselessLiteral("SP") |
-            pp.CaselessLiteral("PC")
+                pp.Combine(
+                    pp.CaselessLiteral("R") + pp.Word(pp.nums)) |  # Соответствует именам регистров (например, R0, R1)
+                pp.CaselessLiteral("SP") |
+                pp.CaselessLiteral("PC")
         ).setParseAction(lambda t: t[0].upper())
 
         # Способы адресации
-        immediate = pp.Combine("#" + (number | identifier)) # Непосредственное значение (например, #10, #метка)
-        absolute = pp.Combine("@" + pp.Optional("#") + (number | identifier)) # Абсолютный адрес (например, @1000, @#variable)
-        reg_deferred = pp.Combine("(" + reg + ")") | pp.Combine("@" + reg) # Регистровая адресация (например, (R0), @R1)
+        immediate = pp.Combine("#" + (number | identifier))  # Непосредственное значение (например, #10, #метка)
+        absolute = pp.Combine(
+            "@" + pp.Optional("#") + (number | identifier))  # Абсолютный адрес (например, @1000, @#variable)
+        reg_deferred = pp.Combine("(" + reg + ")") | pp.Combine(
+            "@" + reg)  # Регистровая адресация (например, (R0), @R1)
 
         auto_inc_indirect = pp.Combine(
             "@" + pp.Optional(pp.White()) +
             "(" + pp.Optional(pp.White()) +
             reg +
             pp.Optional(pp.White()) + ")+"
-        ).setParseAction(lambda t: '@' + t[0][1:].replace(" ", "")) 
+        ).setParseAction(lambda t: '@' + t[0][1:].replace(" ", ""))
 
         auto_inc = pp.Combine(
             "(" + pp.Optional(pp.White()) +
             reg +
             pp.Optional(pp.White()) + ")+"
-        ).setParseAction(lambda t: t[0].replace(" ", "")) # Автоинкремент (например, (R0)+)
+        ).setParseAction(lambda t: t[0].replace(" ", ""))  # Автоинкремент (например, (R0)+)
 
         auto_dec = pp.Combine(
             "-" + "(" + reg + ")"
-        ).setParseAction(lambda t: t[0].replace(" ", "")) # Автодекремент (например, -(R1))
+        ).setParseAction(lambda t: t[0].replace(" ", ""))  # Автодекремент (например, -(R1))
 
         auto_dec_indirect = pp.Combine(
             "@-" + "(" + reg + ")"
-        ).setParseAction(lambda t: t[0].replace(" ", "")) # Косвенный автодекремент  @-(R1)
+        ).setParseAction(lambda t: t[0].replace(" ", ""))  # Косвенный автодекремент  @-(R1)
 
         indexed = pp.Combine(
             pp.Optional(number, default="0") +
             "(" + reg + ")" +
             pp.Optional("+", default="")
-        ) #индексированная адресация
+        )  # индексированная адресация
 
         parameter = (
                 immediate |
@@ -77,20 +81,23 @@ class PDP11Parser:
                 number
         )
 
-        label = (identifier + pp.Suppress(":")).setResultsName("label", listAllMatches=True)  # Метка (идентификатор, за которым следует двоеточие)
-        command = pp.oneOf(list(Data.commands), caseless=True).setResultsName("command") # Команда (из списка допустимых команд)
+        label = (identifier + pp.Suppress(":")).setResultsName("label",
+                                                               listAllMatches=True)  # Метка (идентификатор, за которым следует двоеточие)
+        command = pp.oneOf(list(Data.commands), caseless=True).setResultsName(
+            "command")  # Команда (из списка допустимых команд)
         args = pp.Group(
             pp.Suppress(pp.Optional(',')) + parameter + pp.Suppress(",") + parameter
-        ).setResultsName("args") | pp.Group(parameter).setResultsName("args") #Аргументы команды
-        comment = pp.Suppress(";") + pp.restOfLine.setResultsName("comment") # Комментарий (начинается с ";")
+        ).setResultsName("args") | pp.Group(parameter).setResultsName("args")  # Аргументы команды
+        comment = pp.Suppress(";") + pp.restOfLine.setResultsName("comment")  # Комментарий (начинается с ";")
 
         self.parser = pp.ZeroOrMore(label) + command + pp.Optional(args) + pp.Optional(comment)
 
     def parse(self, line):
         try:
-            result = self.parser.parseString(line, parseAll=True).asDict()  # Разбирает строку и преобразует результаты в словарь
-            self.post_process(result) # Выполняет постобработку результатов
-            self.validate(result) # Выполняет валидацию результатов
+            result = self.parser.parseString(line,
+                                             parseAll=True).asDict()  # Разбирает строку и преобразует результаты в словарь
+            self.post_process(result)  # Выполняет постобработку результатов
+            self.validate(result)  # Выполняет валидацию результатов
             return result
         except pp.ParseException as e:
             return {"error": str(e)}
@@ -99,12 +106,12 @@ class PDP11Parser:
         """
         Выполняет постобработку результатов разбора, например, нормализует регистры.
         """
-        if 'label' in result: 
+        if 'label' in result:
             # Обработка меток
             if isinstance(result['label'], list):
                 result['label'] = [item for sublist in result['label'] for item in sublist]
 
-        if 'args' in result: # Если в результате есть аргументы
+        if 'args' in result:  # Если в результате есть аргументы
             args = []
             for arg in result['args']:
                 if isinstance(arg, list):
@@ -130,73 +137,118 @@ class PDP11Parser:
         if 'command' not in result:
             raise ValueError("Отсутствует команда")
 
-        cmd = result['command'].lower() # Получаем команду в нижнем регистре
+        cmd = result['command'].lower()  # Получаем команду в нижнем регистре
         if cmd in {'mov', 'add', 'sub'} and len(result.get('args', [])) != 2:
             raise ValueError(f"Команда {cmd} требует 2 аргумента")
         elif cmd == 'inc' and len(result.get('args', [])) != 1:
             raise ValueError("Команда inc требует 1 аргумента")
-    def parse_arg(self, arg_str: str) -> dict:
+
+    @staticmethod
+    def parse_arg(arg_str: str) -> Dict[str, Optional[Union[int, str]]]:
+        """
+        Парсит аргумент командыи возвращает режим адресации, номер регистра и дополнительное значение.
+        """
         arg = arg_str.strip().upper()
-        result = {'mode': 0, 'regnum': None, 'additional_value': None}
-        
-        # 1. Обработка регистров (R0-R7, PC, SP)
+        result = {"mode": 0, "regnum": None, "additional_value": None}
+
+        # 1. Проверка на регистр (R0-R7, PC, SP)
         if arg in Data.registers:
-            result['mode'] = 0
-            result['regnum'] = 7 if arg == 'PC' else (6 if arg == 'SP' else int(arg[1]))
+            result["regnum"] = 6 if arg == "SP" else (7 if arg == "PC" else int(arg[1]))
             return result
-        
-        # 2. Обработка чисел (#123, 123, @123)
-        if arg.startswith('#'):
-            try:
-                result['mode'] = 27
-                result['additional_value'] = int(arg[1:])
-                return result
-            except ValueError:
-                pass
-        
-        if arg.startswith('@#'):
-            try:
-                result['mode'] = 37
-                result['additional_value'] = int(arg[2:])
-                return result
-            except ValueError:
-                pass
-        
-        if arg.isdigit() or (arg[0] == '-' and arg[1:].isdigit()):
-            result['mode'] = 37
-            result['additional_value'] = int(arg)
+
+        # 2. Проверка на числа (#123, @123, 123, -123)
+        if (num_match := re.match(r"^[@#]?(-?\d+)$", arg)):
+            num = int(num_match.group(1))
+            result["mode"] = 27 if arg.startswith("#") else 37
+            result["additional_value"] = num
             return result
-        
-        # 3. Обработка сложных режимов адресации
-        if '(' in arg:
-            # Выделяем регистр
-            reg_part = arg[arg.find('(')+1:arg.find(')')]
-            if reg_part in Data.registers:
-                regnum = 7 if reg_part == 'PC' else (6 if reg_part == 'SP' else int(reg_part[1]))
-                result['regnum'] = regnum
-            
-            # Определяем режим адресации
-            if arg.startswith('@-(') and arg.endswith(')'):
-                result['mode'] = 5
-            elif arg.startswith('-(') and arg.endswith(')'):
-                result['mode'] = 4
-            elif arg.startswith('@(') and arg.endswith(')+'):
-                result['mode'] = 3
-            elif arg.startswith('(') and arg.endswith(')+'):
-                result['mode'] = 2
-            elif arg.startswith('@(') and arg.endswith(')'):
-                result['mode'] = 1
-            elif arg.startswith('(') and arg.endswith(')'):
-                result['mode'] = 1
-            else:
-                # Обработка X(Rn) и @X(Rn)
-                left_part = arg.split('(', 1)[0]
-                if left_part and left_part != '@':
-                    try:
-                        num = int(left_part.replace('@', ''))
-                        result['additional_value'] = num
-                        result['mode'] = 7 if arg.startswith('@') else 6
-                    except ValueError:
-                        pass
-        
+
+        # 3. Проверка сложных режимов адресации (X(Rn), @(Rn)+, -(Rn), и т.д.)
+        complex_patterns = {
+            r"^@\((R[0-7]|PC|SP)\)\+$": {"mode": 3, "reg_group": 1},
+            r"^\((R[0-7]|PC|SP)\)\+$": {"mode": 2, "reg_group": 1},
+            r"^@-\((R[0-7]|PC|SP)\)$": {"mode": 5, "reg_group": 1},
+            r"^-\((R[0-7]|PC|SP)\)$": {"mode": 4, "reg_group": 1},
+            r"^@\((R[0-7]|PC|SP)\)$": {"mode": 1, "reg_group": 1},
+            r"^\((R[0-7]|PC|SP)\)$": {"mode": 1, "reg_group": 1},
+            r"^@?(-?\d+)\((R[0-7]|PC|SP)\)$": {"mode": lambda m: 7 if m.group(0).startswith("@") else 6, "reg_group": 2,
+                                               "value_group": 1},
+        }
+
+        for pattern, config in complex_patterns.items():
+            if match := re.fullmatch(pattern, arg):
+                reg = match.group(config["reg_group"])
+                result["regnum"] = 6 if reg == "SP" else (7 if reg == "PC" else int(reg[1]))
+
+                if "value_group" in config:
+                    result["additional_value"] = int(match.group(config["value_group"]))
+
+                if callable(config["mode"]):
+                    result["mode"] = config["mode"](match)
+                else:
+                    result["mode"] = config["mode"]
+
+                return result
+
         return result
+
+    def compile(self, source_lines: list[str]) -> list[dict]:
+        """
+        Компилирует список строк ассемблерного кода в список словарей с разобранными данными.
+        Каждый словарь содержит:
+        - 'adr': адрес в памяти (в восьмеричном формате)
+        - 'label': название метки (если есть)
+        - 'cmd': полная команда с аргументами
+        - 'comment': комментарий (если есть)
+        - 'parsed': разобранные данные команды
+        """
+        compiled = []
+        current_address = 0o1000  # Начальный адрес (восьмеричный)
+
+        for line in source_lines:
+            line = line.strip()
+            if not line:  # Пропускаем пустые строки
+                continue
+
+            # Игнорируем директиву . = 1000
+            if line.startswith(". = "):
+                continue
+
+            # Разбираем строку
+            parsed = self.parse(line)
+            if "error" in parsed:
+                continue
+
+            entry = {
+                'adr': f"{current_address:06o}",  # Адрес в 6-значном восьмеричном формате
+                'label': parsed.get('label', [''])[0] if 'label' in parsed else '',
+                'cmd': line.split(';')[0].strip(),  # Вся команда до комментария
+                'comment': parsed.get('comment', ''),
+            }
+
+            compiled.append(entry)
+
+            # Определяем длину команды в байтах
+            cmd_length = 2  # Базовый размер команды (2 байта)
+
+            # Учитываем аргументы команд
+            if 'args' in parsed:
+                # Для команд с непосредственными значениями (#num) добавляем 2 байта
+                for arg in parsed['args']:
+                    if isinstance(arg, str) and arg.startswith('#'):
+                        cmd_length += 2
+
+            current_address += cmd_length
+
+        return compiled
+
+source = [
+    ". = 1000",
+    "mov #2, R0",
+    "mov #3, R1",
+    "add R0, R1",
+    "halt"
+]
+
+parser = PDP11Parser()
+compiled = parser.compile(source)
