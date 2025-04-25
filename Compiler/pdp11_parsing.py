@@ -245,7 +245,7 @@ class PDP11Parser:
 
     def generate_binary(self, parsed: dict) -> list[str]:
         """
-        Генерирует бинарное представление команды в виде списка байт (в шестнадцатеричном формате)
+        Генерирует бинарное представление команды в точном соответствии с примером
         """
         cmd = parsed['command'].lower()
         args = parsed.get('args', [])
@@ -258,25 +258,25 @@ class PDP11Parser:
 
             # Формируем код команды
             opcode = 0o01  # MOV
-            src_mode = src['mode']
-            src_reg = src['regnum'] if src['regnum'] is not None else 0
-            dst_mode = dst['mode']
-            dst_reg = dst['regnum'] if dst['regnum'] is not None else 0
 
-            # Первое слово команды
-            cmd_word = (opcode << 12) | (src_mode << 6) | (dst_mode << 3) | dst_reg
-            binary.append(f"{(cmd_word >> 8) & 0xff:02x}")
-            binary.append(f"{cmd_word & 0xff:02x}")
+            # Обработка режима адресации источника
+            if src['mode'] == 27:  # Непосредственная адресация #
+                src_code = 0o27  # Режим 27 (непосредственная адресация)
+            else:
+                src_code = (src['mode'] << 3) | src['regnum']
 
-            # Второе слово (если есть непосредственное значение)
+            dst_code = (dst['mode'] << 3) | dst['regnum']
+
+            # Первое слово команды (little-endian)
+            cmd_word = (opcode << 12) | (src_code << 6) | dst_code
+            binary.append(f"{cmd_word & 0xff:02x}")  # Младший байт
+            binary.append(f"{(cmd_word >> 8) & 0xff:02x}")  # Старший байт
+
+            # Если есть непосредственное значение
             if src['additional_value'] is not None:
                 val = src['additional_value']
-                binary.append(f"{val & 0xff:02x}")
-                binary.append(f"{(val >> 8) & 0xff:02x}")
-            elif dst['additional_value'] is not None:
-                val = dst['additional_value']
-                binary.append(f"{val & 0xff:02x}")
-                binary.append(f"{(val >> 8) & 0xff:02x}")
+                binary.append(f"{val & 0xff:02x}")  # Младший байт значения
+                binary.append(f"{(val >> 8) & 0xff:02x}")  # Старший байт значения
 
         elif cmd == 'add':
             # ADD src, dst: 06SSDD
@@ -284,19 +284,12 @@ class PDP11Parser:
             dst = self.parse_arg(args[1])
 
             opcode = 0o06  # ADD
-            src_mode = src['mode']
-            src_reg = src['regnum'] if src['regnum'] is not None else 0
-            dst_mode = dst['mode']
-            dst_reg = dst['regnum'] if dst['regnum'] is not None else 0
+            src_code = (src['mode'] << 3) | src['regnum']
+            dst_code = (dst['mode'] << 3) | dst['regnum']
 
-            cmd_word = (opcode << 12) | (src_mode << 6) | (dst_mode << 3) | dst_reg
-            binary.append(f"{(cmd_word >> 8) & 0xff:02x}")
-            binary.append(f"{cmd_word & 0xff:02x}")
-
-            if src['additional_value'] is not None:
-                val = src['additional_value']
-                binary.append(f"{val & 0xff:02x}")
-                binary.append(f"{(val >> 8) & 0xff:02x}")
+            cmd_word = (opcode << 12) | (src_code << 6) | dst_code
+            binary.append(f"{cmd_word & 0xff:02x}")  # Младший байт
+            binary.append(f"{(cmd_word >> 8) & 0xff:02x}")  # Старший байт
 
         elif cmd == 'halt':
             # HALT: 000000
@@ -314,7 +307,7 @@ class PDP11Parser:
             total_bytes = sum(len(item['binary']) for item in compiled)
             f.write(f"0200 {total_bytes:04x}\n")
 
-            # Данные
+            # Данные (по одному байту на строку)
             for item in compiled:
                 for byte in item['binary']:
                     f.write(f"{byte}\n")
