@@ -6,15 +6,14 @@ sys.path.append('C:/proekt/PDP-11')
 
 Содержит точку входа и цикл выполнения инструкций.
 """
-
-
 from virtual_executor.mem import w_read, reg, NZVC, mem
 from virtual_executor.commands import commands, ArgsProcessor
 from virtual_executor.data_load import load_data
-
-
+from compiler import compiler
 def main():
-    load_data("pdp_11.o")
+    compiler()
+
+    load_data("program.hex")
     reg[7] = 0o1000
     print("---------------- running --------------")
 
@@ -50,7 +49,6 @@ def do_command():
     """Обрабатывает одну команду."""
     # Чтение инструкции и увеличение PC
     word = w_read(reg[7])
-    print(f"Инструкция: {word:06o}")
     print(f"{reg[7]:06o}:", end=" ")
     reg[7] += 2
     args = ArgsProcessor()

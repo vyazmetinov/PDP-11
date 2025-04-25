@@ -210,12 +210,13 @@ class PDP11Parser:
         current_address = 0o1000  # Начальный адрес (восьмеричный)
 
         for line in source_lines:
-            line = line.strip()
             if not line:  # Пропускаем пустые строки
                 continue
 
             # Игнорируем директиву . = 1000
             if line.startswith(". = "):
+                start_address = line.strip().split()[-1]
+                current_address = int(start_address, 8)
                 continue
 
             # Разбираем строку
@@ -245,89 +246,103 @@ class PDP11Parser:
 
     def generate_binary(self, parsed: dict) -> list[str]:
         """
-        Генерирует бинарное представление команды в виде списка байт (в шестнадцатеричном формате)
+        Генерирует бинарное представление команды в виде списка 16-битных слов
+        (каждое слово в шестизначном восьмеричном формате)
         """
         cmd = parsed['command'].lower()
         args = parsed.get('args', [])
-        binary = []
+        words = []  # Список 16-битных слов в восьмеричном формате
 
         if cmd == 'mov':
-            # MOV src, dst: 01SSDD
             src = self.parse_arg(args[0])
             dst = self.parse_arg(args[1])
-
-            # Формируем код команды
             opcode = 0o01  # MOV
-            src_mode = src['mode']
-            src_reg = src['regnum'] if src['regnum'] is not None else 0
-            dst_mode = dst['mode']
-            dst_reg = dst['regnum'] if dst['regnum'] is not None else 0
 
-            # Первое слово команды
-            cmd_word = (opcode << 12) | (src_mode << 6) | (dst_mode << 3) | dst_reg
-            binary.append(f"{(cmd_word >> 8) & 0xff:02x}")
-            binary.append(f"{cmd_word & 0xff:02x}")
+            # Обработка режима адресации
+            src_code = 0o27 if src['mode'] == 27 else (src['mode'] << 3) | src['regnum']
+            dst_code = (dst['mode'] << 3) | dst['regnum']
 
-            # Второе слово (если есть непосредственное значение)
+            # Формируем 16-битное слово команды
+            cmd_word = (opcode << 12) | (src_code << 6) | dst_code
+            words.append(f"{cmd_word:06o}")  # Преобразуем в 6-значное восьмеричное число
+
+            # Если есть непосредственное значение
             if src['additional_value'] is not None:
                 val = src['additional_value']
-                binary.append(f"{val & 0xff:02x}")
-                binary.append(f"{(val >> 8) & 0xff:02x}")
-            elif dst['additional_value'] is not None:
-                val = dst['additional_value']
-                binary.append(f"{val & 0xff:02x}")
-                binary.append(f"{(val >> 8) & 0xff:02x}")
+                words.append(f"{val:06o}")  # Добавляем значение как отдельное слово
 
         elif cmd == 'add':
-            # ADD src, dst: 06SSDD
             src = self.parse_arg(args[0])
             dst = self.parse_arg(args[1])
-
             opcode = 0o06  # ADD
-            src_mode = src['mode']
-            src_reg = src['regnum'] if src['regnum'] is not None else 0
-            dst_mode = dst['mode']
-            dst_reg = dst['regnum'] if dst['regnum'] is not None else 0
+            src_code = (src['mode'] << 3) | src['regnum']
+            dst_code = (dst['mode'] << 3) | dst['regnum']
 
-            cmd_word = (opcode << 12) | (src_mode << 6) | (dst_mode << 3) | dst_reg
-            binary.append(f"{(cmd_word >> 8) & 0xff:02x}")
-            binary.append(f"{cmd_word & 0xff:02x}")
-
-            if src['additional_value'] is not None:
-                val = src['additional_value']
-                binary.append(f"{val & 0xff:02x}")
-                binary.append(f"{(val >> 8) & 0xff:02x}")
+            cmd_word = (opcode << 12) | (src_code << 6) | dst_code
+            words.append(f"{cmd_word:06o}")
 
         elif cmd == 'halt':
-            # HALT: 000000
-            binary.append("00")
-            binary.append("00")
+            words.append("000000")  # HALT
 
-        return binary
+        return words
+
+    def compile(self, source_lines: list[str]) -> list[dict]:
+        """
+        Компилирует список строк ассемблерного кода
+        """
+        compiled = []
+        current_address = 0o1000  # Начальный адрес (восьмеричный)
+
+        for line in source_lines:
+            if not line:  # Пропускаем пустые строки
+                continue
+
+            # Обрабатываем директиву . =
+            if line.startswith(". = "):
+                start_address = line.strip().split()[-1]
+                current_address = int(start_address, 8)
+                continue
+
+            # Разбираем строку
+            parsed = self.parse(line)
+            if "error" in parsed:
+                continue
+
+            # Генерируем бинарное представление команды
+            binary_words = self.generate_binary(parsed)
+
+            entry = {
+                'adr': f"{current_address:06o}",
+                'label': parsed.get('label', [''])[0] if 'label' in parsed else '',
+                'cmd': line.split(';')[0].strip(),
+                'comment': parsed.get('comment', ''),
+                'binary': binary_words
+            }
+
+            compiled.append(entry)
+
+            # Увеличиваем адрес на количество слов * 2 (каждое слово = 2 байта)
+            current_address += len(binary_words) * 2
+
+        return compiled
 
     def generate_hex_file(self, compiled: list[dict], filename: str):
         """
-        Генерирует hex-файл из скомпилированных данных
+        Генерирует hex-файл из скомпилированных данных в указанном формате
         """
         with open(filename, 'w') as f:
-            # Заголовок (адрес и длина)
-            total_bytes = sum(len(item['binary']) for item in compiled)
-            f.write(f"0200 {total_bytes:04x}\n")
-
-            # Данные
+            # Собираем все байты в один список
+            all_bytes = []
             for item in compiled:
-                for byte in item['binary']:
-                    f.write(f"{byte}\n")
+                for word in item['binary']:
+                    # Преобразуем восьмеричное слово в два байта (little-endian)
+                    num = int(word, 8)
+                    all_bytes.append(num & 0xff)  # Младший байт
+                    all_bytes.append((num >> 8) & 0xff)  # Старший байт
 
+            # Заголовок (0200 <длина_в_байтах>)
+            f.write(f"0200 {len(all_bytes):04x}\n")
 
-source = [
-    ". = 1000",
-    "mov #2, R0",
-    "mov #3, R1",
-    "add R0, R1",
-    "halt"
-]
-
-parser = PDP11Parser()
-compiled = parser.compile(source)
-parser.generate_hex_file(compiled, "output.hex")
+            # Записываем байты по одному на строку
+            for byte in all_bytes:
+                f.write(f"{byte:02x}\n")
