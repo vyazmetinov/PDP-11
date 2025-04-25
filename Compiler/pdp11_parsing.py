@@ -328,23 +328,21 @@ class PDP11Parser:
 
     def generate_hex_file(self, compiled: list[dict], filename: str):
         """
-        Генерирует hex-файл из скомпилированных данных
+        Генерирует hex-файл из скомпилированных данных в указанном формате
         """
         with open(filename, 'w') as f:
-            # Заголовок (адрес и длина)
-            total_bytes = sum(len(item['binary']) for item in compiled)
-            f.write(f"0200 {total_bytes:04x}\n")
-
-            # Данные (по одному байту на строку)
+            # Собираем все байты в один список
+            all_bytes = []
             for item in compiled:
-                for byte in item['binary']:
-                    f.write(f"{byte}\n")
+                for word in item['binary']:
+                    # Преобразуем восьмеричное слово в два байта (little-endian)
+                    num = int(word, 8)
+                    all_bytes.append(num & 0xff)  # Младший байт
+                    all_bytes.append((num >> 8) & 0xff)  # Старший байт
 
+            # Заголовок (0200 <длина_в_байтах>)
+            f.write(f"0200 {len(all_bytes):04x}\n")
 
-source = [
-    ". = 1000",
-    "mov #2, R0",
-    "mov #3, R1",
-    "add R0, R1",
-    "halt"
-]
+            # Записываем байты по одному на строку
+            for byte in all_bytes:
+                f.write(f"{byte:02x}\n")
