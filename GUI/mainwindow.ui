@@ -78,7 +78,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideRight</enum>
@@ -109,7 +109,7 @@
      <x>0</x>
      <y>0</y>
      <width>968</width>
-     <height>24</height>
+     <height>36</height>
     </rect>
    </property>
    <widget class="QMenu" name="File">
@@ -505,6 +505,22 @@ background-color: white;
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionBuild</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>build()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>483</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>openFile()</slot>
@@ -515,5 +531,6 @@ background-color: white;
   <slot>stopAssembly()</slot>
   <slot>runAssembly()</slot>
   <slot>VisibleMemoryChange()</slot>
+  <slot>build()</slot>
  </slots>
 </ui>

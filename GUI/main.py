@@ -5,6 +5,7 @@ import PySide6
 from PySide6 import QtWidgets, QtCore
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QWidget, QFileDialog
+from Compiler.pdp11_parsing import PDP11Parser
 import subprocess
 
 if __name__ == "__main__":
@@ -113,6 +114,11 @@ class Mainwindow(PySide6.QtWidgets.QMainWindow, ui_mainwindow.Ui_MainWindow):
     def stopAssembly(self):
         self.header_2.timer.stop()
         self.header_2.runButton.setIcon(QIcon(":icons/icons/play_arrow.svg"))
+    def build(self):
+        code = self.code.toPlainText().split("\n")
+        self.tabWidget.code.model.dataset = PDP11Parser.compile(code)
+
+
 
 
 app = QApplication(sys.argv)
