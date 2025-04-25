@@ -12,7 +12,7 @@
 Параметры команд (ss, dd и др.) определяют режимы адресации.
 """
 
-from mem import w_read, w_write, reg, b_write
+from mem import w_read, w_write, reg, b_write, NZVC
 from args import ArgsProcessor
 import sys
 
@@ -25,10 +25,18 @@ def do_mov(args):
         raise ValueError("Ошибка аргументов MOV")
 
 def do_add(args):
-    """Обработчик ADD: сложение с сохранением результата."""
+    """Обработчик ADD: сложение с сохранением результата и обновлением флагов."""
+    global NZVC  # Добавляем доступ к флагам
+
     if args.dd and args.ss:
         result = args.ss.value + args.dd.value
-        args.dd.write(result & 0xFFFF)  # Учет переполнения
+        args.dd.write(result & 0xFFFF)
+
+        # Обновление флагов
+        NZVC[0] = (result >> 15) & 1  # Negative (старший бит)
+        NZVC[1] = 1 if (result & 0xFFFF) == 0 else 0  # Zero
+        NZVC[2] = 1 if result > 0xFFFF else 0  # Overflow
+        NZVC[3] = (result >> 16) & 1  # Carry
     else:
         raise ValueError("Ошибка аргументов ADD")
 
