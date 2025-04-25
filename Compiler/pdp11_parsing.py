@@ -191,6 +191,7 @@ class PDP11Parser:
                 return result
 
         return result
+
     def compile(self, source_lines: list[str]) -> list[dict]:
         """
         Компилирует список строк ассемблерного кода в список словарей с разобранными данными.
@@ -209,41 +210,45 @@ class PDP11Parser:
             if not line:  # Пропускаем пустые строки
                 continue
 
+            # Игнорируем директиву . = 1000
+            if line.startswith(". = "):
+                continue
+
             # Разбираем строку
             parsed = self.parse(line)
             if "error" in parsed:
-                continue  
+                continue
 
             entry = {
                 'adr': f"{current_address:06o}",  # Адрес в 6-значном восьмеричном формате
                 'label': parsed.get('label', [''])[0] if 'label' in parsed else '',
                 'cmd': line.split(';')[0].strip(),  # Вся команда до комментария
                 'comment': parsed.get('comment', ''),
-                'parsed': parsed
             }
 
             compiled.append(entry)
 
-            # Обновляем адрес (каждая команда занимает 2 байта)
-            current_address += 2
+            # Определяем длину команды в байтах
+            cmd_length = 2  # Базовый размер команды (2 байта)
 
-            # Если команда имеет аргументы, увеличиваем адрес дополнительно
-            if 'args' in parsed and parsed['args']:
-                current_address += len(parsed['args']) * 2
+            # Учитываем аргументы команд
+            if 'args' in parsed:
+                # Для команд с непосредственными значениями (#num) добавляем 2 байта
+                for arg in parsed['args']:
+                    if isinstance(arg, str) and arg.startswith('#'):
+                        cmd_length += 2
+
+            current_address += cmd_length
 
         return compiled
 
 source = [
-    "main: mov #123, R1 ; Инициализация",
-    "loop: add R1, R2",
-    "      sub #1, R1",
-    "      bne loop",
-    "      halt"
+    ". = 1000",
+    "mov #2, R0",
+    "mov #3, R1",
+    "add R0, R1",
+    "halt"
 ]
 
 parser = PDP11Parser()
 compiled = parser.compile(source)
-
-for entry in compiled:
-    print(f"Разобранные данные: {entry['parsed']}")
-    print("-" * 40)
