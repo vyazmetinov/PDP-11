@@ -6,25 +6,24 @@ sys.path.append('C:/proekt/PDP-11')
 
 Содержит точку входа и цикл выполнения инструкций.
 """
-
-
 from virtual_executor.mem import w_read, reg, NZVC, mem
 from virtual_executor.commands import commands, ArgsProcessor
 from virtual_executor.data_load import load_data
-
-
+from compiler import compiler
 def main():
-    load_data("pdp_11.o")
+    compiler()
+
+    load_data("program.hex")
     reg[7] = 0o1000
     print("---------------- running --------------")
-    args = ArgsProcessor()
+
 
     while True:
-        changes = execute_and_track(args)
+        changes = execute_and_track()
         print("Изменения:", changes)
     return changes
 
-def execute_and_track(args):
+def execute_and_track():
     """Выполняет команду и возвращает изменения в mem, reg, NZVC."""
     # Сохраняем исходные состояния
     old_mem = mem.copy()
@@ -32,7 +31,7 @@ def execute_and_track(args):
     old_NZVC = NZVC.copy()
 
     # Выполняем команду
-    do_command(args)
+    do_command()
 
     # Находим изменения
     mem_changes = [i for i in range(len(mem)) if mem[i] != old_mem[i]]
@@ -46,13 +45,14 @@ def execute_and_track(args):
     }
 
 
-def do_command(args):
+def do_command():
     """Обрабатывает одну команду."""
     # Чтение инструкции и увеличение PC
     word = w_read(reg[7])
+    
     print(f"{reg[7]:06o}:", end=" ")
     reg[7] += 2
-
+    args = ArgsProcessor()
     # Поиск и выполнение команды
     for cmd in commands:
         if (word & cmd["mask"]) == cmd["opcode"]:
