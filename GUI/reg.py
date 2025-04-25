@@ -13,6 +13,8 @@ class MyModel(QAbstractTableModel):
         ["Z", 0],
         ["V", 0],
         ["C", 0],
+        [" ", None],
+        ["R0", 0],
         ["R1", 0],
         ["R2", 0],
         ["R3", 0],
@@ -20,7 +22,6 @@ class MyModel(QAbstractTableModel):
         ["R5", 0],
         ["R6", 0],
         ["R7", 0],
-        ["R8", 0],
     ]
 
 
@@ -33,7 +34,7 @@ class MyModel(QAbstractTableModel):
 
         if role == Qt.ItemDataRole.DisplayRole:
             if index.column() == 0:
-                return (str(self.dataset[index.row()][0]) + ":")
+                return (str(self.dataset[index.row()][0]))
             elif index.column() == 1:
                 return self.dataset[index.row()][1]
         return None
